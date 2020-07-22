@@ -1,3 +1,6 @@
+#ifndef FILE_UTILS_H_
+#define FILE_UTILS_H_
+
 #include "../include/Card.h"
 #include "../include/versions.h"
 #include "../json/json/json.h"
@@ -62,3 +65,5 @@ void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
     cardDB->insert(pair<int, Card>(stoi(tmpCard.getID()), tmpCard));
   }
 }
+
+#endif
