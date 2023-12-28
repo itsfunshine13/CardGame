@@ -18,6 +18,7 @@ CFLAGS = -Wall -g
 INCLUDES  = include/Card.h
 INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
+INCLUDES += include/Deck.h
 INCLUDES += include/fileUtils.h
 INCLUDES += include/Profiles.h
 INCLUDES += include/versions.h
@@ -36,6 +37,7 @@ LIBS = -ljsoncpp
 # define the C source files
 SRCS += json/jsoncpp.cpp
 SRCS += src/Card.cpp
+SRCS += src/Deck.cpp
 SRCS += src/main.cpp
 SRCS += src/Profiles.cpp
 

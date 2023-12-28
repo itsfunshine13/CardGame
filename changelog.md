@@ -19,3 +19,4 @@ Updates and working tasks
 - [x] Add example decks 
 - [ ] Add profile class
 - [ ] Load profiles from main
+- [ ] Add deck class

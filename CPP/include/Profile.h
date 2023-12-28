@@ -2,6 +2,7 @@
 #define PROFILE_H_
 
 #include "Card.h"
+#include "Deck.h"
 #include <string>
 #include <vector>
 
