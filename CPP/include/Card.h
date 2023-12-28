@@ -1,9 +1,8 @@
 #ifndef CARD_H_
 #define CARD_H_
 
-#include "../include/CardTypes.h"
+#include "CardTypes.h"
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include <stdlib.h>

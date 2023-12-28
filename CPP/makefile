@@ -19,6 +19,7 @@ INCLUDES  = include/Card.h
 INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
 INCLUDES += include/fileUtils.h
+INCLUDES += include/Profiles.h
 INCLUDES += include/versions.h
 INCLUDES += include/versionTypes.h
 
@@ -36,6 +37,7 @@ LIBS = -ljsoncpp
 SRCS += json/jsoncpp.cpp
 SRCS += src/Card.cpp
 SRCS += src/main.cpp
+SRCS += src/Profiles.cpp
 
 # define the C object files
 #

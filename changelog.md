@@ -8,12 +8,14 @@ Updates and working tasks
 - [ ] Update include paths
 
 ## add-deck-profiles
-- [ ] Add profile folder
-- [ ] Add example profiles. 
+- [x] Add profile folder
+- [x] Add example profile json file
     1. Profiles should be json files.
         - Profile Name
         - List of decks
             - Deck Profile
                 - Deck Name
-                - Cards
-- [ ] Add example decks 
+                - Card IDs
+- [x] Add example decks 
+- [ ] Add profile class
+- [ ] Load profiles from main

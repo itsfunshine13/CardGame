@@ -2,6 +2,7 @@
 #define FILE_UTILS_H_
 
 #include "../include/Card.h"
+#include "../include/Profile.h"
 #include "../include/versions.h"
 #include "../json/json/json.h"
 #include "../json/json/json-forwards.h"
@@ -14,8 +15,18 @@
 using namespace std;
 
 const string DEFAULT_CARD_LIST_FILE = "./CardData/cardData.json";
+const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/player_profiles.json";
 
-
+// FUNCTION:
+//   loadCardData()
+//
+// PARAMETERS:
+//   filePath       - path to cardData.json
+//   cardDB         - pointer to card database stored in a map. <CardID, Card>
+//   useDefaultFile - boolean to determine if to use default cardData.json file
+//
+// DESCRIPTION:
+//   Reads cardData.json and builds card database stored into a map
 void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
 {
   VersionData *cardVersionPtr = &cardlistVersion;
@@ -66,4 +77,18 @@ void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
   }
 }
 
+// FUNCTION:
+//   loadProfileData()
+//
+// PARAMETERS:
+//   filePath       - path to profile.json
+//   cardDB         - pointer to card database stored in a map. <CardID, Card>
+//   useDefaultFile - boolean to determine if to use default cardData.json file
+//
+// DESCRIPTION:
+//   Reads profile.json and loads profiles
+void loadProfileData(string filePath, map<string, Profile> *cardDB, bool useDefaultFile)
+{
+
+}
 #endif
