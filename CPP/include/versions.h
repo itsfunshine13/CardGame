@@ -6,6 +6,6 @@
 
 using namespace std;
 
-VersionData cardlistVerion;
+VersionData cardlistVersion;
 
 #endif
