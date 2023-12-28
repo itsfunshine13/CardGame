@@ -18,7 +18,7 @@ const string DEFAULT_CARD_LIST_FILE = "./CardData/cardData.json";
 
 void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
 {
-  VersionData *cardVersionPtr = &cardlistVerion;
+  VersionData *cardVersionPtr = &cardlistVersion;
 
   if (useDefaultFile == true)
   {
