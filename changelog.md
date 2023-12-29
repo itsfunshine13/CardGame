@@ -17,6 +17,6 @@ Updates and working tasks
                 - Deck Name
                 - Card IDs
 - [x] Add example decks 
-- [ ] Add profile class
-- [ ] Load profiles from main
-- [ ] Add deck class
+- [x] Add profile class
+- [x] Load profiles from main
+- [x] Add deck class

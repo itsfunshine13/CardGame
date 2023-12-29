@@ -16,9 +16,13 @@ private:
 
 public:
     Profile();
+    Profile(string profileName);
     ~Profile();
+    void setProfileName(string profileName);
+    void addDeck(Deck deck);
     string getProfileName();
-    vector<Deck> getDecks();
+    vector<Deck> getAllDecks();
+    void displayAllDeckNames();
 };
 
 #endif

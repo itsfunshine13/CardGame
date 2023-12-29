@@ -13,11 +13,15 @@ private:
     vector<Card> playDeck;
     vector<Card> originalDeck;
     uint8_t deckSizeLimit;
+    string deckName;
 
 public:
     Deck();
-    Deck(uint8_t deckSizeLimit);
+    Deck(string deckName, uint8_t deckSizeLimit);
     ~Deck();
+
+    void setDeckName(string deckName);
+    void setDeckSizeLimit(uint8_t deckSizeLimit);
 
     void addToOringalDeck(Card card);
     int  removeCard(string cardID);
@@ -27,7 +31,6 @@ public:
     void sortDeck();
 
     void displayDeck(uint8_t choice);
-
     void drawCard(Card *card);
 
     vector<Card> getPlayDeck();
@@ -35,6 +38,7 @@ public:
     int getOriginalDeckSize();
     int getRemainingCardsSize();
     int getDeckSizeLimit();
+    string getDeckName();
 
 };
 

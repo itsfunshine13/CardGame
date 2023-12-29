@@ -11,14 +11,29 @@
 
 using namespace std;
 
-Deck::Deck(){ this->deckSizeLimit = 0; }
+Deck::Deck()
+{ 
+    this->deckName = "NO_NAME_SET";
+    this->deckSizeLimit = 0; 
+}
 
-Deck::Deck(uint8_t deckSizeLimit)
+Deck::Deck(string deckName, uint8_t deckSizeLimit)
 {
+    this->deckName = deckName;
     this->deckSizeLimit = deckSizeLimit;
 }
 
 Deck::~Deck(){}
+
+void Deck::setDeckName(string deckName)
+{
+    this->deckName = deckName;
+}
+
+void Deck::setDeckSizeLimit(uint8_t deckSizeLimit)
+{
+    this->deckSizeLimit = deckSizeLimit;
+}
 
 void Deck::addToOringalDeck(Card card)
 {
@@ -28,7 +43,7 @@ void Deck::addToOringalDeck(Card card)
 int Deck::removeCard(string cardID)
 {
     int retVal = RETVAL_ERROR;
-    for (int i = 0; i < originalDeck.size(); i++)
+    for (uint8_t i = 0; i < originalDeck.size(); i++)
     {
         if (this->originalDeck[i].getID().compare(cardID) == 0)
         {
@@ -80,7 +95,7 @@ void Deck::displayDeck(uint8_t choice)
         return;
     }
 
-    for (int i = 1; i < deck->size()+1; i++)
+    for (uint8_t i = 1; i < deck->size()+1; i++)
     {
         cout << i + ". " + deck->at(i-1).getCardName() << endl;
     }
@@ -116,4 +131,9 @@ int Deck::getRemainingCardsSize()
 int Deck::getDeckSizeLimit()
 {
     return this->deckSizeLimit;
+}
+
+string Deck::getDeckName()
+{
+    return this->deckName;
 }

@@ -20,7 +20,7 @@ INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
 INCLUDES += include/Deck.h
 INCLUDES += include/fileUtils.h
-INCLUDES += include/Profiles.h
+INCLUDES += include/Profile.h
 INCLUDES += include/versions.h
 INCLUDES += include/versionTypes.h
 
@@ -39,7 +39,7 @@ SRCS += json/jsoncpp.cpp
 SRCS += src/Card.cpp
 SRCS += src/Deck.cpp
 SRCS += src/main.cpp
-SRCS += src/Profiles.cpp
+SRCS += src/Profile.cpp
 
 # define the C object files
 #

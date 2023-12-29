@@ -2,6 +2,7 @@
 #define FILE_UTILS_H_
 
 #include "../include/Card.h"
+#include "../include/Deck.h"
 #include "../include/Profile.h"
 #include "../include/versions.h"
 #include "../json/json/json.h"
@@ -78,6 +79,30 @@ void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
 }
 
 // FUNCTION:
+//   jsonListStrToStringVector()
+//
+// PARAMETERS:
+//   cardList       - pointer to vector string of card IDs
+//   jsonStrList    - string in form "[<cardID>,<cardID>,<cardID>,..]"
+//
+// DESCRIPTION:
+//   Parses json string list to get card IDs and stores in cardList
+void jsonListStrToStringVector(vector<string> *cardList, string jsonStrList)
+{
+  // Remove square brackets
+  string tmpStr = jsonStrList.substr(1, jsonStrList.length());
+
+  // Tokenize the substring to get back just the IDs
+  stringstream tokenStream(tmpStr);
+  string cardID;
+
+  while(getline(tokenStream, cardID, ','))
+  {
+    cardList->push_back(cardID);
+  }
+}
+
+// FUNCTION:
 //   loadProfileData()
 //
 // PARAMETERS:
@@ -87,8 +112,72 @@ void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
 //
 // DESCRIPTION:
 //   Reads profile.json and loads profiles
-void loadProfileData(string filePath, map<string, Profile> *cardDB, bool useDefaultFile)
+void loadProfileData(string filePath, 
+                     map<string, Profile> *profileDB, 
+                     map<int, Card> *cardDB,
+                     bool useDefaultFile)
 {
+  if (useDefaultFile == true)
+  {
+    filePath = DEFAULT_PLAYER_PROFILE_FILE;
+  }
+  ifstream inFileStream(filePath);
 
-}
+  JSONCPP_STRING err;
+  Json::CharReaderBuilder jsonBuilder;
+  jsonBuilder["collectComments"] = false;
+  const std::unique_ptr<Json::CharReader> jsonReader(jsonBuilder.newCharReader());
+  Json::Value root;
+
+  bool parseJsonSuccess = parseFromStream(jsonBuilder, inFileStream, &root, &err);
+  if (parseJsonSuccess == false)
+  {
+    cout << "JSONCPP Parsing failed: " << err << endl;
+    return;
+  }
+
+  // Loop through profiles
+  const Json::Value profileRoot = root["Profiles"];
+  for (uint16_t i = 0; i < profileRoot.size(); i++)
+  {
+    Profile tmpProfile;
+    tmpProfile.setProfileName(profileRoot[i]["Name"].asString());
+
+    // Loop through Decks
+    Json::Value deckRoot = profileRoot[i]["Decks"];
+    for (uint16_t j = 0; j < deckRoot.size(); j++)
+    {
+      Deck tmpDeck;
+      vector<string> tmpCardList;
+
+      tmpDeck.setDeckName(deckRoot[j]["Name"].asString());
+
+      // Get Basic Cards
+      string jsonCardListString = deckRoot[j]["BasicCards"].asString();
+      jsonListStrToStringVector(&tmpCardList, jsonCardListString);
+      // Add basic cards to Deck
+      for (uint8_t cardIdx = 0; cardIdx < tmpCardList.size(); cardIdx++)
+      {
+        Card tmpCard = cardDB->at(stoi(tmpCardList.at(cardIdx)));
+        tmpDeck.addToOringalDeck(tmpCard);
+      }
+      
+      // Get Advanced Cards
+      tmpCardList.clear();
+      jsonCardListString = deckRoot[j]["AdvancedCards"].asString();
+      jsonListStrToStringVector(&tmpCardList, jsonCardListString);
+      // Add basic cards to Deck
+      for (uint8_t cardIdx = 0; cardIdx < tmpCardList.size(); cardIdx++)
+      {
+        Card tmpCard = cardDB->at(stoi(tmpCardList.at(cardIdx)));
+        tmpDeck.addToOringalDeck(tmpCard);
+      }
+
+      tmpProfile.addDeck(tmpDeck);
+    } //eof deckRoot
+    
+    profileDB->insert(pair<string, Profile>(tmpProfile.getProfileName(), tmpProfile));
+  } //eof profileRoot
+} //eof loadProfileData
+
 #endif
