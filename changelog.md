@@ -27,8 +27,8 @@ Updates and working tasks
     - [ ] load profile
     - [ ] change profile
     - [ ] new profile
-    - [ ] card info
-    - [ ] game rules
-    - [ ] chang deck
+    - [x] card info
+    - [x] game rules
+    - [x] change deck
     - [ ] create deck
 

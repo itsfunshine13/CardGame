@@ -18,6 +18,9 @@ private:
 
     map<int, Card>       *ptr_masterCardList;
     map<string, Profile> *ptr_profileDB;
+
+    bool m_profileSet;
+    bool m_deckSet;
     
 public:
     GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *profileDB);
