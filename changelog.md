@@ -20,3 +20,15 @@ Updates and working tasks
 - [x] Add profile class
 - [x] Load profiles from main
 - [x] Add deck class
+
+## add-menus-profile-and-deck-creation
+- [ ] Add menus
+    - [ ] play game
+    - [ ] load profile
+    - [ ] change profile
+    - [ ] new profile
+    - [ ] card info
+    - [ ] game rules
+    - [ ] chang deck
+    - [ ] create deck
+
