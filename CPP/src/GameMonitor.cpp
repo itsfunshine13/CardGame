@@ -170,7 +170,41 @@ void GameMonitor::playGameMenu()
     } //eos
 }
 
-void GameMonitor::loadProfileMenu() {}
+void GameMonitor::loadProfileMenu() 
+{
+    //clear console screen
+    system("cls"); 
+
+    cout << "Load Profile" << endl;
+    cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
+    cout << endl;
+    cout << "1. Change Profile" << endl;
+    cout << "2. New Profile" << endl;
+    cout << "3. Back" << endl;
+	cout << "Choice: ";
+    cin >> t_inputChar;
+
+    switch (t_inputChar)
+    {
+    case '1': 
+        changeProfileMenu();
+        loadProfileMenu();
+        break;
+    case '2': 
+        newProfileMenu();
+        loadProfileMenu();
+        break;
+    case '3': 
+        mainMenu();
+        break;
+    default:
+        cout << endl;
+        cout << "Invalid Input" << endl;
+        sleep(2); //sleep for 2s
+        loadProfileMenu();
+        break;
+    } //eos
+}
 
 void GameMonitor::cardInformationMenu()
 {
@@ -301,12 +335,101 @@ void GameMonitor::createDeckMenu()
 
 void GameMonitor::changeProfileMenu()
 {
+    int t_num;
     //clear console screen
     system("cls"); 
+
+    cout << "Change Profile" << endl;
+    cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
+    cout << endl;
+
+    map<string, Profile>::iterator it;
+    int counter = 1;
+    for (it = ptr_profileDB->begin(); it != ptr_profileDB->end(); it++, counter++)
+    {
+        cout << counter << ". " << it->first << endl;
+    } //eof
+    
+    // counter should be 1 more than max due to for loop
+    cout << counter << ". Back" << endl;
+	cout << "Choice: ";
+    cin >> t_inputStr;
+
+    try
+    {
+        t_num = stoi(t_inputStr);
+    }
+    catch(...)
+    {
+        cout << "Invalid input" << endl;
+        changeProfileMenu();
+    }
+    
+    // check if choice in bounds of profile list & Back choice
+    if (t_num >= 1 && t_num <= counter)
+    {
+        // if Back is chosen
+        if (t_num == counter)
+        {
+            return;
+        }
+        else
+        {
+            // increment iterator to choice
+            it = ptr_profileDB->begin();
+            for (int i = 0; i < t_num-1; i++)
+            {
+                it++;
+            }
+            
+            m_currProfile = it->second;
+            m_profileSet = true;
+            changeProfileMenu();
+        }
+    }
+    else
+    {
+        cout << "Invalid input" << endl;
+        sleep(1);
+        changeProfileMenu();
+    }
+
 }
 
 void GameMonitor::newProfileMenu()
 {
-    //clear console screen
-    system("cls"); 
+    string t_profileName = "New Profile";
+    bool exitMenu = false;
+    
+    while (true)
+    {
+        //clear console screen
+        system("cls"); 
+
+        cout << "Creating New Profile" << endl;
+        cout << "\t Profile Name: " << t_profileName << endl;
+        cout << endl;
+        cout << "1. Done   - go back" << endl;
+        cout << "2. Cancel - go back" << endl;
+        cout << "Name: ";
+        cin >> t_inputStr;
+
+        if (t_inputStr.compare("1") == 0)
+        {
+            Profile t_profile(t_profileName);
+
+            // Add profile to database and set as current profile
+            this->ptr_profileDB->insert(pair<string, Profile>(t_profile.getProfileName(),t_profile));
+            this->m_currProfile = this->ptr_profileDB->at(t_profile.getProfileName());
+            return;
+        }
+        else if (t_inputStr.compare("2") == 0)
+        {
+            return;
+        }
+        else
+        {
+            t_profileName = t_inputStr;
+        }
+    } //eow
 }

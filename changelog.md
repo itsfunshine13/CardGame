@@ -24,9 +24,9 @@ Updates and working tasks
 ## add-menus-profile-and-deck-creation
 - [ ] Add menus
     - [ ] play game
-    - [ ] load profile
-    - [ ] change profile
-    - [ ] new profile
+    - [x] load profile
+    - [x] change profile
+    - [x] new profile
     - [x] card info
     - [x] game rules
     - [x] change deck
