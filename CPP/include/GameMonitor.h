@@ -28,7 +28,7 @@ public:
 
     // Helper functions
     void displayCardSet(Rarity rType);
-    void displayDeckCreation(Deck *deck);
+    void displayDeckCreation(vector<Card> cards);
 
     // Menu functions
     void mainMenu();

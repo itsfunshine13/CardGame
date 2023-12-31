@@ -15,8 +15,8 @@ using namespace std;
 
 static char   t_inputChar;
 static string t_inputStr;
-static string t_profileSet;
-static string t_deckSet;
+static string t_loadedProfileName;
+static string t_loadedDeckName;
 
 GameMonitor::GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *profileDB)
 {
@@ -25,8 +25,8 @@ GameMonitor::GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *p
     this->m_profileSet       = false;
     this->m_deckSet          = false;
 
-    t_profileSet = "NONE PICKED";
-    t_deckSet    = "NONE PICKED";
+    t_loadedProfileName = "NONE PICKED";
+    t_loadedDeckName    = "NONE PICKED";
 }
 
 GameMonitor::~GameMonitor()
@@ -53,12 +53,47 @@ void GameMonitor::displayCardSet(Rarity rType)
     cout << "Enter any key to go back" << endl;
     cin >> t_inputStr;
     cardInformationMenu();
-}
+} //eo displayCardSet
 
-void GameMonitor::displayDeckCreation(Deck *deck)
+void GameMonitor::displayDeckCreation(vector<Card> cards)
 {
+    vector<string> t_basicCards;
+    vector<string> t_advCards;
 
-}
+    int t_num;
+    string t_cardListHeader = "Basic ====== Adv";
+    string t_basicString;
+
+    // Build temp vectors
+    for (uint8_t i = 0; i < cards.size(); i++)
+    {
+        t_num = stoi(cards.at(i).getID());
+        if (t_num >= BASIC_CARD_ID_START && t_num <= BASIC_CARD_ID_END)
+        {
+            t_basicCards.push_back(cards.at(i).getCardName());
+        }
+        else if (t_num >= ADV_CARD_ID_START && t_num <= ADV_CARD_ID_END)
+        {
+            t_advCards.push_back(cards.at(i).getCardName());
+        }
+    } //eof
+    
+    // hacky way to avoid out of bounds error in printing the cards
+    while (t_basicCards.size() < 10) { t_basicCards.push_back(""); }
+    while (t_advCards.size() < 10)   { t_advCards.push_back(""); }
+
+    cout << t_cardListHeader << endl;
+    // 10 is both basic card and adv card limit
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        t_basicString = (i+1) + ". " + t_basicCards.at(i);
+        // string padding
+        while (t_basicString.length() < 13) { t_basicString += " "; }
+
+        cout << t_basicString << (i+1) << ". " << t_advCards.at(i);
+    }//eof
+    
+} //eo displayDeckCreation
 
 void GameMonitor::mainMenu()
 {
@@ -119,7 +154,7 @@ void GameMonitor::mainMenu()
         mainMenu();
         break;
     } //eos
-}
+} //eo mainMenu
 
 void GameMonitor::playGameMenu() 
 {
@@ -127,8 +162,8 @@ void GameMonitor::playGameMenu()
     system("cls"); 
 
     cout << "Play Menu" << endl;
-    cout << "\t Profile Loaded: " << t_profileSet << endl;
-    cout << "\t Deck Loaded: " << t_deckSet << endl;
+    cout << "\t Profile Loaded: " << t_loadedProfileName << endl;
+    cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
     cout << endl;
     cout << "1. Start" << endl;
     cout << "2. Change Deck" << endl;
@@ -148,7 +183,7 @@ void GameMonitor::playGameMenu()
         break;
     // Change Deck
     case '2': 
-        if (m_profileSet == false)
+        if (this->m_profileSet == false)
         {
             cout << "No profile is selected. No decks to load from." << endl;
             sleep(2);
@@ -157,6 +192,7 @@ void GameMonitor::playGameMenu()
         else
         {
             changeDeckMenu();
+            playGameMenu();
         }
         break;
     // Create Deck
@@ -174,7 +210,7 @@ void GameMonitor::playGameMenu()
         playGameMenu();
         break;
     } //eos
-}
+} //eo playGameMenu
 
 void GameMonitor::cardInformationMenu()
 {
@@ -204,19 +240,15 @@ void GameMonitor::cardInformationMenu()
 
     switch (t_inputChar)
     {
-    // Display Core Cards
     case '1': 
         displayCardSet(RARITY_CORE);
         break;
-    // Display Basic Cards
     case '2': 
         displayCardSet(RARITY_BASIC);
         break;
-    // Display Advanced Cards
     case '3': 
         displayCardSet(RARITY_HIGHGRADE);
         break;
-    // Back
     case '4': 
         mainMenu();
         break;   
@@ -227,7 +259,7 @@ void GameMonitor::cardInformationMenu()
         cardInformationMenu();
         break;
     } //eos
-}
+} //eo cardInformationMenu
 
 void GameMonitor::gameRulesMenu() 
 {
@@ -257,7 +289,7 @@ void GameMonitor::gameRulesMenu()
     cout << "Enter any key to go back" << endl;
     cin >> t_inputStr;
     mainMenu();
-}
+} //eo gameRulesMenu
 
 void GameMonitor::loadProfileMenu() 
 {
@@ -293,7 +325,7 @@ void GameMonitor::loadProfileMenu()
         loadProfileMenu();
         break;
     } //eos
-}
+} //eo loadProfileMenu
 
 void GameMonitor::changeProfileMenu()
 {
@@ -344,8 +376,9 @@ void GameMonitor::changeProfileMenu()
                 it++;
             }
             
-            m_currProfile = it->second;
-            m_profileSet = true;
+            this->m_currProfile = it->second;
+            this->m_profileSet = true;
+            t_loadedProfileName = it->second.getProfileName();
             changeProfileMenu();
         }
     }
@@ -356,7 +389,7 @@ void GameMonitor::changeProfileMenu()
         changeProfileMenu();
     }
 
-}
+} //eo changeProfileMenu
 
 void GameMonitor::newProfileMenu()
 {
@@ -393,7 +426,7 @@ void GameMonitor::newProfileMenu()
             t_profileName = t_inputStr;
         }
     } //eow
-}
+} //eo newProfileMenu
 
 void GameMonitor::changeDeckMenu() 
 {
@@ -401,37 +434,51 @@ void GameMonitor::changeDeckMenu()
     system("cls"); 
 
     cout << "Change Deck" << endl;
-    cout << "\t Deck Loaded: " << this->m_currDeck.getDeckName() << endl;
+    cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
     cout << endl;
     cout << "Decks Available: " << endl;
-    for (uint8_t i = 1; i < m_currProfile.getAllDecks().size()+1; i++)
+    int counter;
+    for (counter = 1; counter < int(this->m_currProfile.getAllDecks().size())+1; counter++)
     {
-        cout << i << ". " << m_currProfile.getAllDecks().at(i-1).getDeckName() << endl;
+        cout << counter << ". " << this->m_currProfile.getAllDecks().at(counter-1).getDeckName() << endl;
     } //eof
-    cout << "0. Back" << endl;
+    cout << counter << ". Back" << endl;
 	cout << "Choice: ";
-    cin >> t_inputChar;
+    cin >> t_inputStr;
 
-    if (t_inputChar == '0')
+    if (t_inputStr.compare(""+(counter-1)) == 0)
     {
         playGameMenu();
     }
 
+    int t_num;
     // convert input to int
-    int t_num = int(t_inputChar - '0');
-    if (t_num <= int(m_currProfile.getAllDecks().size()))
+    try
     {
-        m_currDeck = m_currProfile.getAllDecks().at(t_num);
+        t_num = stoi(t_inputStr);
+    }
+    catch(...)
+    {
+        cout << endl;
+        cout << "Invalid Input: " << t_inputStr << endl;
+        sleep(2); //sleep for 2s
+        changeDeckMenu();
+    }
+    
+    if (t_num <= int(this->m_currProfile.getAllDecks().size()))
+    {
+        m_currDeck = this->m_currProfile.getAllDecks().at(t_num);
         m_deckSet = true;
+        t_loadedDeckName = m_currDeck.getDeckName();
     }
     else
     {
         cout << endl;
-        cout << "Invalid Input: " << t_inputChar << endl;
+        cout << "Invalid Input: " << t_inputStr << endl;
         sleep(2); //sleep for 2s
         changeDeckMenu();
     }
-}
+} //eo changeDeckMenu
 
 void GameMonitor::createDeckMenu()
 {
@@ -448,13 +495,14 @@ void GameMonitor::createDeckMenu()
         cout << "Creating New Deck" << endl;
         cout << "\tDeck Name: " << t_deckName << endl << endl;
 
-        displayDeckCreation(&t_deck);
+        displayDeckCreation(t_deck.getOriginalDeck());
 
         cout << "1. Edit Deck Name" << endl;
         cout << "2. Add Basic Card" << endl;
         cout << "3. Add Advanced Card" << endl;
         cout << "4. Remove Cards" << endl;
-        cout << "5. Back" << endl;
+        cout << "5. Done   - Go back" << endl;
+        cout << "6. Cancel - Go back" << endl;
         cout << "Choice: ";
         cin >> t_inputChar;
 
@@ -475,6 +523,10 @@ void GameMonitor::createDeckMenu()
             removeCardMenu(&t_deck);
             break; 
         case '5':
+            // deck restriction validation
+            exitMenu = true;
+            break;
+        case '6':
             exitMenu = true;
             break;
         default:
@@ -486,7 +538,7 @@ void GameMonitor::createDeckMenu()
         } //eos
     } //eow
     playGameMenu();
-}
+} //eo createDeckMenu
 
 string GameMonitor::editDeckNameMenu()
 {
@@ -517,7 +569,7 @@ string GameMonitor::editDeckNameMenu()
             t_newDeckname = t_inputStr;
         }
     } //eow
-}
+} //eo editDeckNameMenu
 
 void GameMonitor::addBasicCardMenu(Deck *deck)
 {
