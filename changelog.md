@@ -31,4 +31,5 @@ Updates and working tasks
     - [x] game rules
     - [x] change deck
     - [ ] create deck
+- [x] Add card sorting for the deck
 

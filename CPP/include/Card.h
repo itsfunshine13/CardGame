@@ -28,6 +28,8 @@ private:
   Action    secondAction;
 
 public:
+  bool operator< (const Card &other) const;
+  
   Card(
     string cardName,
     string cardDescription,
@@ -40,8 +42,10 @@ public:
     string cardSubclass,
     string firstAction,
     string secondAction);
+
   Card();
   ~Card();
+
   string    getCardName();
   string    getID();
   bool      isReleased();

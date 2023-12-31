@@ -8,6 +8,11 @@
 using namespace std;
 
 
+bool Card::operator< (const Card &other) const 
+{
+    return stoi(this->cardID) < stoi(other.cardID);
+}
+
 Card::Card(
   string cardName,
   string cardDescription,

@@ -35,6 +35,11 @@ void Deck::setDeckSizeLimit(uint8_t deckSizeLimit)
     this->deckSizeLimit = deckSizeLimit;
 }
 
+void Deck::overWriteOriginalDeck(vector<Card> newDeck)
+{
+    this->originalDeck = newDeck;
+}
+
 void Deck::addToOringalDeck(Card card)
 {
     this->originalDeck.push_back(card);
@@ -74,20 +79,20 @@ void Deck::shufflePlayDeck()
 
 void Deck::sortDeck()
 {
-    cout << "TODO" << endl;
+    sort( this->originalDeck.begin(), this->originalDeck.end());
 }
 
 void Deck::displayDeck(uint8_t choice)
 {
-    vector<Card> *deck;
+    vector<Card> deck;
 
     if (choice == 0 ) 
     { 
-        deck = &(this->originalDeck);
+        deck = this->originalDeck;
     }
     else if (choice == 1)
     {
-        deck = &(this->playDeck);
+        deck = this->playDeck;
     }
     else
     {
@@ -95,9 +100,10 @@ void Deck::displayDeck(uint8_t choice)
         return;
     }
 
-    for (uint8_t i = 1; i < deck->size()+1; i++)
+    cout << "printing decklist" << endl;
+    for (uint8_t i = 0; i < deck.size(); i++)
     {
-        cout << i + ". " + deck->at(i-1).getCardName() << endl;
+        cout << (i+1) << ". " + deck.at(i).getCardName() << endl;
     }
     
 }

@@ -26,17 +26,28 @@ public:
     GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *profileDB);
     ~GameMonitor();
 
+    // Helper functions
     void displayCardSet(Rarity rType);
+    void displayDeckCreation(Deck *deck);
 
+    // Menu functions
     void mainMenu();
     void playGameMenu();
-    void loadProfileMenu();
     void cardInformationMenu();
     void gameRulesMenu();
-    void changeDeckMenu();
-    void createDeckMenu();
+
+    void loadProfileMenu();
     void changeProfileMenu();
     void newProfileMenu();
+
+    void changeDeckMenu();
+    void createDeckMenu();
+
+    string editDeckNameMenu();
+    void addBasicCardMenu(Deck *deck);
+    void addAdvCardMenu(Deck *deck);
+    void removeCardMenu(Deck *deck);
+
 
 };
 

@@ -2,6 +2,7 @@
 #include "../include/Card.h"
 #include "../include/Profile.h"
 #include "../include/cardTypes.h"
+#include "../include/commonTypes.h"
 
 #include <iostream>
 #include <map>
@@ -52,6 +53,11 @@ void GameMonitor::displayCardSet(Rarity rType)
     cout << "Enter any key to go back" << endl;
     cin >> t_inputStr;
     cardInformationMenu();
+}
+
+void GameMonitor::displayDeckCreation(Deck *deck)
+{
+
 }
 
 void GameMonitor::mainMenu()
@@ -170,42 +176,6 @@ void GameMonitor::playGameMenu()
     } //eos
 }
 
-void GameMonitor::loadProfileMenu() 
-{
-    //clear console screen
-    system("cls"); 
-
-    cout << "Load Profile" << endl;
-    cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
-    cout << endl;
-    cout << "1. Change Profile" << endl;
-    cout << "2. New Profile" << endl;
-    cout << "3. Back" << endl;
-	cout << "Choice: ";
-    cin >> t_inputChar;
-
-    switch (t_inputChar)
-    {
-    case '1': 
-        changeProfileMenu();
-        loadProfileMenu();
-        break;
-    case '2': 
-        newProfileMenu();
-        loadProfileMenu();
-        break;
-    case '3': 
-        mainMenu();
-        break;
-    default:
-        cout << endl;
-        cout << "Invalid Input" << endl;
-        sleep(2); //sleep for 2s
-        loadProfileMenu();
-        break;
-    } //eos
-}
-
 void GameMonitor::cardInformationMenu()
 {
     //clear console screen
@@ -289,48 +259,40 @@ void GameMonitor::gameRulesMenu()
     mainMenu();
 }
 
-void GameMonitor::changeDeckMenu() 
+void GameMonitor::loadProfileMenu() 
 {
     //clear console screen
     system("cls"); 
 
-    cout << "Change Deck" << endl;
-    cout << "\t Deck Loaded: " << this->m_currDeck.getDeckName() << endl;
+    cout << "Load Profile" << endl;
+    cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
     cout << endl;
-    cout << "Decks Available: " << endl;
-    for (uint8_t i = 1; i < m_currProfile.getAllDecks().size()+1; i++)
-    {
-        cout << i << ". " << m_currProfile.getAllDecks().at(i-1).getDeckName() << endl;
-    } //eof
-    cout << "0. Back" << endl;
+    cout << "1. Change Profile" << endl;
+    cout << "2. New Profile" << endl;
+    cout << "3. Back" << endl;
 	cout << "Choice: ";
     cin >> t_inputChar;
 
-    if (t_inputChar == '0')
+    switch (t_inputChar)
     {
-        playGameMenu();
-    }
-
-    // convert input to int
-    int t_num = int(t_inputChar - '0');
-    if (t_num <= m_currProfile.getAllDecks().size())
-    {
-        m_currDeck = m_currProfile.getAllDecks().at(t_num);
-        m_deckSet = true;
-    }
-    else
-    {
+    case '1': 
+        changeProfileMenu();
+        loadProfileMenu();
+        break;
+    case '2': 
+        newProfileMenu();
+        loadProfileMenu();
+        break;
+    case '3': 
+        mainMenu();
+        break;
+    default:
         cout << endl;
-        cout << "Invalid Input: " << t_inputChar << endl;
+        cout << "Invalid Input" << endl;
         sleep(2); //sleep for 2s
-        changeDeckMenu();
-    }
-}
-
-void GameMonitor::createDeckMenu()
-{
-    //clear console screen
-    system("cls"); 
+        loadProfileMenu();
+        break;
+    } //eos
 }
 
 void GameMonitor::changeProfileMenu()
@@ -399,7 +361,6 @@ void GameMonitor::changeProfileMenu()
 void GameMonitor::newProfileMenu()
 {
     string t_profileName = "New Profile";
-    bool exitMenu = false;
     
     while (true)
     {
@@ -432,4 +393,143 @@ void GameMonitor::newProfileMenu()
             t_profileName = t_inputStr;
         }
     } //eow
+}
+
+void GameMonitor::changeDeckMenu() 
+{
+    //clear console screen
+    system("cls"); 
+
+    cout << "Change Deck" << endl;
+    cout << "\t Deck Loaded: " << this->m_currDeck.getDeckName() << endl;
+    cout << endl;
+    cout << "Decks Available: " << endl;
+    for (uint8_t i = 1; i < m_currProfile.getAllDecks().size()+1; i++)
+    {
+        cout << i << ". " << m_currProfile.getAllDecks().at(i-1).getDeckName() << endl;
+    } //eof
+    cout << "0. Back" << endl;
+	cout << "Choice: ";
+    cin >> t_inputChar;
+
+    if (t_inputChar == '0')
+    {
+        playGameMenu();
+    }
+
+    // convert input to int
+    int t_num = int(t_inputChar - '0');
+    if (t_num <= int(m_currProfile.getAllDecks().size()))
+    {
+        m_currDeck = m_currProfile.getAllDecks().at(t_num);
+        m_deckSet = true;
+    }
+    else
+    {
+        cout << endl;
+        cout << "Invalid Input: " << t_inputChar << endl;
+        sleep(2); //sleep for 2s
+        changeDeckMenu();
+    }
+}
+
+void GameMonitor::createDeckMenu()
+{
+    bool exitMenu = false;
+    string t_deckName = "New Deck";
+    string temp;
+    Deck t_deck(t_deckName, DECK_SIZE_LIMIT);
+    
+    while (exitMenu == false)
+    {
+        //clear console screen
+        system("cls"); 
+
+        cout << "Creating New Deck" << endl;
+        cout << "\tDeck Name: " << t_deckName << endl << endl;
+
+        displayDeckCreation(&t_deck);
+
+        cout << "1. Edit Deck Name" << endl;
+        cout << "2. Add Basic Card" << endl;
+        cout << "3. Add Advanced Card" << endl;
+        cout << "4. Remove Cards" << endl;
+        cout << "5. Back" << endl;
+        cout << "Choice: ";
+        cin >> t_inputChar;
+
+        switch (t_inputChar)
+        {
+        case '1': 
+            temp = editDeckNameMenu();
+            // Update new deckName only if valid
+            temp.compare("-1") == 0 ? temp = "": t_deckName = temp;
+            break;
+        case '2': 
+            addBasicCardMenu(&t_deck);
+            break;
+        case '3': 
+            addAdvCardMenu(&t_deck);
+            break;
+        case '4': 
+            removeCardMenu(&t_deck);
+            break; 
+        case '5':
+            exitMenu = true;
+            break;
+        default:
+            cout << endl;
+            cout << "Invalid Input" << endl;
+            sleep(2); //sleep for 2s
+            createDeckMenu();
+            break;
+        } //eos
+    } //eow
+    playGameMenu();
+}
+
+string GameMonitor::editDeckNameMenu()
+{
+    string t_newDeckname = "New Deck";
+    
+    while (true)
+    {
+        //clear console screen
+        system("cls"); 
+
+        cout << "Deck Name: " << t_newDeckname << endl;
+        cout << endl;
+        cout << "1. Done   - go back" << endl;
+        cout << "2. Cancel - go back" << endl;
+        cout << "Name: ";
+        cin >> t_inputStr;
+
+        if (t_inputStr.compare("1") == 0)
+        {
+            return t_newDeckname;
+        }
+        else if (t_inputStr.compare("2") == 0)
+        {
+             return "-1";
+        }
+        else
+        {
+            t_newDeckname = t_inputStr;
+        }
+    } //eow
+}
+
+void GameMonitor::addBasicCardMenu(Deck *deck)
+{
+
+}
+
+void GameMonitor::addAdvCardMenu(Deck *deck)
+{
+
+}
+
+void GameMonitor::removeCardMenu(Deck *deck)
+{
+
 }
