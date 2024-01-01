@@ -33,3 +33,5 @@ Updates and working tasks
     - [x] create deck
 - [x] Add card sorting for the deck
 
+## extern-card-and-profile-db
+- [x] Move db to global vars

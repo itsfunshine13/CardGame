@@ -15,6 +15,10 @@
 
 using namespace std;
 
+// Define Global variables
+extern map<int, Card> masterCardList;
+extern map<string, Profile> profileDB;
+
 const string DEFAULT_CARD_LIST_FILE = "./CardData/cardData.json";
 const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/player_profiles.json";
 
@@ -23,12 +27,11 @@ const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/player_profiles.json";
 //
 // PARAMETERS:
 //   filePath       - path to cardData.json
-//   cardDB         - pointer to card database stored in a map. <CardID, Card>
 //   useDefaultFile - boolean to determine if to use default cardData.json file
 //
 // DESCRIPTION:
 //   Reads cardData.json and builds card database stored into a map
-void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
+void loadCardData(string filePath, bool useDefaultFile)
 {
   VersionData *cardVersionPtr = &cardlistVersion;
 
@@ -74,7 +77,7 @@ void loadCardData(string filePath, map<int, Card> *cardDB, bool useDefaultFile)
       cardRoot[i]["Second Action"].asString()
     );
 
-    cardDB->insert(pair<int, Card>(stoi(tmpCard.getID()), tmpCard));
+    masterCardList.insert(pair<int, Card>(stoi(tmpCard.getID()), tmpCard));
   }
 }
 
@@ -107,15 +110,11 @@ void jsonListStrToStringVector(vector<string> *cardList, string jsonStrList)
 //
 // PARAMETERS:
 //   filePath       - path to profile.json
-//   cardDB         - pointer to card database stored in a map. <CardID, Card>
 //   useDefaultFile - boolean to determine if to use default cardData.json file
 //
 // DESCRIPTION:
 //   Reads profile.json and loads profiles
-void loadProfileData(string filePath, 
-                     map<string, Profile> *profileDB, 
-                     map<int, Card> *cardDB,
-                     bool useDefaultFile)
+void loadProfileData(string filePath, bool useDefaultFile)
 {
   if (useDefaultFile == true)
   {
@@ -158,7 +157,7 @@ void loadProfileData(string filePath,
       // Add basic cards to Deck
       for (uint8_t cardIdx = 0; cardIdx < tmpCardList.size(); cardIdx++)
       {
-        Card tmpCard = cardDB->at(stoi(tmpCardList.at(cardIdx)));
+        Card tmpCard = masterCardList.at(stoi(tmpCardList.at(cardIdx)));
         tmpDeck.addToOringalDeck(tmpCard);
       }
       
@@ -169,14 +168,14 @@ void loadProfileData(string filePath,
       // Add basic cards to Deck
       for (uint8_t cardIdx = 0; cardIdx < tmpCardList.size(); cardIdx++)
       {
-        Card tmpCard = cardDB->at(stoi(tmpCardList.at(cardIdx)));
+        Card tmpCard = masterCardList.at(stoi(tmpCardList.at(cardIdx)));
         tmpDeck.addToOringalDeck(tmpCard);
       }
 
       tmpProfile.addDeck(tmpDeck);
     } //eof deckRoot
     
-    profileDB->insert(pair<string, Profile>(tmpProfile.getProfileName(), tmpProfile));
+    profileDB.insert(pair<string, Profile>(tmpProfile.getProfileName(), tmpProfile));
   } //eof profileRoot
 } //eof loadProfileData
 

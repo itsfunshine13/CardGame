@@ -12,6 +12,10 @@
 
 using namespace std;
 
+// Define Global variables
+extern map<int, Card> masterCardList;
+extern map<string, Profile> profileDB;
+
 enum ADD_REMOVE{
     ADD,
     REMOVE
@@ -22,10 +26,8 @@ static string t_inputStr;
 static string t_loadedProfileName;
 static string t_loadedDeckName;
 
-GameMonitor::GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *profileDB)
+GameMonitor::GameMonitor()
 {
-    this->ptr_masterCardList = masterCardList;
-    this->ptr_profileDB      = profileDB;
     this->m_profileSet       = false;
     this->m_deckSet          = false;
 
@@ -33,11 +35,7 @@ GameMonitor::GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *p
     t_loadedDeckName    = "NONE PICKED";
 }
 
-GameMonitor::~GameMonitor()
-{
-    delete this->ptr_masterCardList;
-    delete this->ptr_profileDB;
-}
+GameMonitor::~GameMonitor(){}
 
 // Helper functions
 void GameMonitor::displayCardSet(Rarity rType)
@@ -45,7 +43,7 @@ void GameMonitor::displayCardSet(Rarity rType)
     //clear console screen
     system("cls"); 
     map<int, Card>::iterator it;
-    for (it = this->ptr_masterCardList->begin(); it != this->ptr_masterCardList->end(); it++)
+    for (it = masterCardList.begin(); it != masterCardList.end(); it++)
     {
         if (it->second.getRarity() == rType)
         {
@@ -371,7 +369,7 @@ void GameMonitor::changeProfileMenu()
 
     map<string, Profile>::iterator it;
     int counter = 1;
-    for (it = ptr_profileDB->begin(); it != ptr_profileDB->end(); it++, counter++)
+    for (it = profileDB.begin(); it != profileDB.end(); it++, counter++)
     {
         cout << counter << ". " << it->first << endl;
     } //eof
@@ -402,7 +400,7 @@ void GameMonitor::changeProfileMenu()
         else
         {
             // increment iterator to choice
-            it = ptr_profileDB->begin();
+            it = profileDB.begin();
             for (int i = 0; i < t_num-1; i++)
             {
                 it++;
@@ -445,8 +443,8 @@ void GameMonitor::newProfileMenu()
             Profile t_profile(t_profileName);
 
             // Add profile to database and set as current profile
-            this->ptr_profileDB->insert(pair<string, Profile>(t_profile.getProfileName(),t_profile));
-            this->m_currProfile = this->ptr_profileDB->at(t_profile.getProfileName());
+            profileDB.insert(pair<string, Profile>(t_profile.getProfileName(),t_profile));
+            this->m_currProfile = profileDB.at(t_profile.getProfileName());
             this->m_profileSet = true;
             return;
         }
@@ -672,7 +670,7 @@ void GameMonitor::addOrRmBasicCardMenu(Deck *deck)
         case '1': 
             if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_ATTACK_ID), BASIC_CARD_LIMIT))
             {
-                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_ATTACK_ID));
+                deck->addToOringalDeck(masterCardList.at(BASIC_ATTACK_ID));
             }
             else if (t_addOrRemove == ADD) // limit validation failed
             {
@@ -687,7 +685,7 @@ void GameMonitor::addOrRmBasicCardMenu(Deck *deck)
         case '2': 
             if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_BLOCK_ID), BASIC_CARD_LIMIT))
             {
-                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_BLOCK_ID));
+                deck->addToOringalDeck(masterCardList.at(BASIC_BLOCK_ID));
             }
             else if (t_addOrRemove == ADD) // limit validation failed
             {
@@ -702,7 +700,7 @@ void GameMonitor::addOrRmBasicCardMenu(Deck *deck)
         case '3': 
             if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_HEAL_ID), BASIC_CARD_LIMIT))
             {
-                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_HEAL_ID));
+                deck->addToOringalDeck(masterCardList.at(BASIC_HEAL_ID));
             }
             else if (t_addOrRemove == ADD) // limit validation failed
             {
@@ -831,7 +829,7 @@ void GameMonitor::addOrRmAdvCardMenu(Deck *deck)
         {
             if (t_addOrRemove == ADD && addCardValidation(deck, to_string(t_cardID), ADV_CARD_LIMIT))
             {
-                deck->addToOringalDeck(ptr_masterCardList->at(t_cardID));
+                deck->addToOringalDeck(masterCardList.at(t_cardID));
             }
             else if (t_addOrRemove == ADD) // limit validation failed
             {
