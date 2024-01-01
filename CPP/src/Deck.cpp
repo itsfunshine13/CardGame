@@ -43,6 +43,7 @@ void Deck::overWriteOriginalDeck(vector<Card> newDeck)
 void Deck::addToOringalDeck(Card card)
 {
     this->originalDeck.push_back(card);
+    sortDeck();
 }
 
 int Deck::removeCard(string cardID)
@@ -62,6 +63,7 @@ int Deck::removeCard(string cardID)
 void Deck::clearOriginalDeck()
 {
     this->originalDeck.clear();
+    this->playDeck.clear();
 }
 
 void Deck::rebuildPlayDeck()
@@ -105,7 +107,6 @@ void Deck::displayDeck(uint8_t choice)
     {
         cout << (i+1) << ". " + deck.at(i).getCardName() << endl;
     }
-    
 }
 
 void Deck::drawCard(Card *card)

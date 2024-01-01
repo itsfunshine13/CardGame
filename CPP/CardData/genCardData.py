@@ -51,7 +51,6 @@ descColNum      = 10
 # DESCRIPTION:
 #   Creates json file from data parsed in parseXlsx()
 def createJson(fileName):
-  print("create stay gold")
   global dataDictionary
   global pp
 
@@ -69,8 +68,6 @@ def createJson(fileName):
 #   Parses .xlsx file. See help() to see columns parsed
 #   Creates data dictionary for createJson()
 def parseXlsx(fileLoc):
-  print("parse stay gold")
-
   global verboseLevel
   global dataDictionary
   global pp
@@ -170,7 +167,6 @@ def help():
 
 # Define main function
 def main(argv):
-  print("stay gold")
   global verboseLevel
 
   # Get Default File Location

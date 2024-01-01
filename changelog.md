@@ -30,6 +30,6 @@ Updates and working tasks
     - [x] card info
     - [x] game rules
     - [x] change deck
-    - [ ] create deck
+    - [x] create deck
 - [x] Add card sorting for the deck
 

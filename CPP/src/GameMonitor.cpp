@@ -12,6 +12,10 @@
 
 using namespace std;
 
+enum ADD_REMOVE{
+    ADD,
+    REMOVE
+};
 
 static char   t_inputChar;
 static string t_inputStr;
@@ -55,13 +59,14 @@ void GameMonitor::displayCardSet(Rarity rType)
     cardInformationMenu();
 } //eo displayCardSet
 
-void GameMonitor::displayDeckCreation(vector<Card> cards)
+void GameMonitor::displayDeck(vector<Card> cards)
 {
     vector<string> t_basicCards;
     vector<string> t_advCards;
 
+    int paddingAmt = 16;
     int t_num;
-    string t_cardListHeader = "Basic ====== Adv";
+    string t_cardListHeader = "Basic ========= Adv ============";
     string t_basicString;
 
     // Build temp vectors
@@ -77,30 +82,51 @@ void GameMonitor::displayDeckCreation(vector<Card> cards)
             t_advCards.push_back(cards.at(i).getCardName());
         }
     } //eof
-    
+
     // hacky way to avoid out of bounds error in printing the cards
     while (t_basicCards.size() < 10) { t_basicCards.push_back(""); }
     while (t_advCards.size() < 10)   { t_advCards.push_back(""); }
 
     cout << t_cardListHeader << endl;
     // 10 is both basic card and adv card limit
-    for (uint8_t i = 0; i < 10; i++)
+    for (int i = 1; i <= 10; i++)
     {
-        t_basicString = (i+1) + ". " + t_basicCards.at(i);
         // string padding
-        while (t_basicString.length() < 13) { t_basicString += " "; }
-
-        cout << t_basicString << (i+1) << ". " << t_advCards.at(i);
+        if (i < 10)
+        {
+            t_basicString = to_string(i) + ".  " + t_basicCards.at(i-1);
+            while (int(t_basicString.length()) < paddingAmt) { t_basicString.append(" "); }
+        }
+        else
+        {
+            t_basicString = to_string(i) + ". " + t_basicCards.at(i-1);
+            while (int(t_basicString.length()) < paddingAmt-1) { t_basicString.append(" "); }
+        }
+        cout << t_basicString << i << ". " << t_advCards.at(i-1) << endl;
     }//eof
     
-} //eo displayDeckCreation
+} //eo displayDeck
+
+bool GameMonitor::addCardValidation(Deck *deck, string cardID, uint8_t limit)
+{
+    uint8_t count = 0;
+    for (uint8_t i = 0; i < deck->getOriginalDeckSize(); i++)
+    {
+        // Check if found a cardID in the deck
+        if (deck->getOriginalDeck().at(i).getID().compare(cardID) == 0)
+        {
+            count++;
+        }
+    } //eof
+    return (count < limit);
+}
 
 void GameMonitor::mainMenu()
 {
     //clear console screen
     system("cls"); 
 
-    cout << "Main Menu" << endl;
+    cout << "============ Main Menu ============" << endl;
     cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
     cout << endl;
     cout << "1. Play Game" << endl;
@@ -116,22 +142,18 @@ void GameMonitor::mainMenu()
     {
     // Play Game
     case '1':
-        cout << "going to playGameMenu" << endl;
         playGameMenu();
         break;
     // Load profile
     case '2':
-        cout << "going to loadProfileMenu" << endl;
         loadProfileMenu();
         break;
     // Card Information
     case '3':
-        cout << "going to cardInformationMenu" << endl;
         cardInformationMenu();
         break;
     // How to play
     case '4':
-        cout << "going to gameRulesMenu" << endl;
         gameRulesMenu();
         break;
     // Save All
@@ -158,12 +180,21 @@ void GameMonitor::mainMenu()
 
 void GameMonitor::playGameMenu() 
 {
+    this->m_profileSet ? t_loadedProfileName = this->m_currProfile.getProfileName() : "NONE PICKED";
+    this->m_deckSet    ? t_loadedDeckName    = this->m_currDeck.getDeckName()       : "NONE PICKED";
+
     //clear console screen
     system("cls"); 
 
-    cout << "Play Menu" << endl;
-    cout << "\t Profile Loaded: " << t_loadedProfileName << endl;
-    cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
+    cout << "============ Play Menu ============" << endl;
+    cout << "\t Profile: " << t_loadedProfileName << endl;
+    cout << "\t    Deck: " << t_loadedDeckName << endl;
+    
+    if (m_deckSet)
+    {
+        displayDeck(this->m_currDeck.getOriginalDeck());
+    }
+
     cout << endl;
     cout << "1. Start" << endl;
     cout << "2. Change Deck" << endl;
@@ -198,6 +229,7 @@ void GameMonitor::playGameMenu()
     // Create Deck
     case '3': 
         createDeckMenu();
+        playGameMenu();
         break;
     // Back
     case '4': 
@@ -217,7 +249,7 @@ void GameMonitor::cardInformationMenu()
     //clear console screen
     system("cls"); 
 
-    cout << "Card Information" << endl << endl;
+    cout << "============ Card Information ============" << endl << endl;
 
     cout << "Core Cards" << endl;
     cout << "\tAlways start your turn with all 3 Core cards" << endl << endl;
@@ -296,7 +328,7 @@ void GameMonitor::loadProfileMenu()
     //clear console screen
     system("cls"); 
 
-    cout << "Load Profile" << endl;
+    cout << "============ Load Profile ============" << endl;
     cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
     cout << endl;
     cout << "1. Change Profile" << endl;
@@ -333,7 +365,7 @@ void GameMonitor::changeProfileMenu()
     //clear console screen
     system("cls"); 
 
-    cout << "Change Profile" << endl;
+    cout << "============ Change Profile ============" << endl;
     cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
     cout << endl;
 
@@ -400,7 +432,7 @@ void GameMonitor::newProfileMenu()
         //clear console screen
         system("cls"); 
 
-        cout << "Creating New Profile" << endl;
+        cout << "============ Creating New Profile ============" << endl;
         cout << "\t Profile Name: " << t_profileName << endl;
         cout << endl;
         cout << "1. Done   - go back" << endl;
@@ -415,6 +447,7 @@ void GameMonitor::newProfileMenu()
             // Add profile to database and set as current profile
             this->ptr_profileDB->insert(pair<string, Profile>(t_profile.getProfileName(),t_profile));
             this->m_currProfile = this->ptr_profileDB->at(t_profile.getProfileName());
+            this->m_profileSet = true;
             return;
         }
         else if (t_inputStr.compare("2") == 0)
@@ -433,7 +466,7 @@ void GameMonitor::changeDeckMenu()
     //clear console screen
     system("cls"); 
 
-    cout << "Change Deck" << endl;
+    cout << "============ Change Deck ============" << endl;
     cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
     cout << endl;
     cout << "Decks Available: " << endl;
@@ -446,7 +479,7 @@ void GameMonitor::changeDeckMenu()
 	cout << "Choice: ";
     cin >> t_inputStr;
 
-    if (t_inputStr.compare(""+(counter-1)) == 0)
+    if (t_inputStr.compare(""+(counter)) == 0)
     {
         playGameMenu();
     }
@@ -455,7 +488,7 @@ void GameMonitor::changeDeckMenu()
     // convert input to int
     try
     {
-        t_num = stoi(t_inputStr);
+        t_num = stoi(t_inputStr)-1;
     }
     catch(...)
     {
@@ -482,25 +515,27 @@ void GameMonitor::changeDeckMenu()
 
 void GameMonitor::createDeckMenu()
 {
-    bool exitMenu = false;
+    bool t_exitMenu  = false;
+    bool t_leaveLoop = false;
     string t_deckName = "New Deck";
     string temp;
     Deck t_deck(t_deckName, DECK_SIZE_LIMIT);
     
-    while (exitMenu == false)
+    while (t_exitMenu == false)
     {
         //clear console screen
         system("cls"); 
 
-        cout << "Creating New Deck" << endl;
-        cout << "\tDeck Name: " << t_deckName << endl << endl;
+        cout << "============ Creating New Deck ============" << endl;
+        cout << "\tDeck Name: " << t_deck.getDeckName() << endl << endl;
 
-        displayDeckCreation(t_deck.getOriginalDeck());
+        displayDeck(t_deck.getOriginalDeck());
 
+        cout << endl;
         cout << "1. Edit Deck Name" << endl;
-        cout << "2. Add Basic Card" << endl;
-        cout << "3. Add Advanced Card" << endl;
-        cout << "4. Remove Cards" << endl;
+        cout << "2. Add/Remove Basic Cards" << endl;
+        cout << "3. Add/Remove Advanced Cards" << endl;
+        cout << "4. Clear All Cards" << endl;
         cout << "5. Done   - Go back" << endl;
         cout << "6. Cancel - Go back" << endl;
         cout << "Choice: ";
@@ -512,22 +547,51 @@ void GameMonitor::createDeckMenu()
             temp = editDeckNameMenu();
             // Update new deckName only if valid
             temp.compare("-1") == 0 ? temp = "": t_deckName = temp;
+            t_deck.setDeckName(t_deckName);
             break;
         case '2': 
-            addBasicCardMenu(&t_deck);
+            addOrRmBasicCardMenu(&t_deck);
             break;
         case '3': 
-            addAdvCardMenu(&t_deck);
+            addOrRmAdvCardMenu(&t_deck);
             break;
         case '4': 
-            removeCardMenu(&t_deck);
+            t_leaveLoop = false;
+            while (t_leaveLoop == false)
+            {
+                system("cls"); 
+                displayDeck(t_deck.getOriginalDeck());
+                cout << endl;
+                cout << "DELETE ALL CARDS IN DECK?" << endl;
+                cout << "Confirm? [Y/N]: ";
+                cin >> t_inputChar;
+
+                switch (t_inputChar)
+                {
+                case 'Y':
+                case 'y':
+                    t_deck.clearOriginalDeck();
+                    t_leaveLoop = true;
+                    break;
+                case 'N':
+                case 'n':
+                    // Do nothing - exit switch cases and continue loop menu
+                    t_leaveLoop = true;
+                    break;
+                default:
+                    cerr << "Invalid input. Enter [Y/N]" << endl;
+                    sleep(1);
+                    break;
+                }
+            }
             break; 
         case '5':
-            // deck restriction validation
-            exitMenu = true;
+            this->m_currDeck = t_deck;
+            this->m_deckSet = true;
+            t_exitMenu = true;
             break;
         case '6':
-            exitMenu = true;
+            t_exitMenu = true;
             break;
         default:
             cout << endl;
@@ -571,17 +635,213 @@ string GameMonitor::editDeckNameMenu()
     } //eow
 } //eo editDeckNameMenu
 
-void GameMonitor::addBasicCardMenu(Deck *deck)
+void GameMonitor::addOrRmBasicCardMenu(Deck *deck)
 {
+    string t_addOrRemoveStr = "Add";
+    ADD_REMOVE t_addOrRemove = ADD;
+    bool t_leaveLoop = false;
 
-}
+    while (t_leaveLoop == false)
+    {
+        //clear console screen
+        system("cls"); 
 
-void GameMonitor::addAdvCardMenu(Deck *deck)
+        displayDeck(deck->getOriginalDeck());
+        cout << endl;
+
+        cout << "============ " << t_addOrRemoveStr << " Basic Card ============" << endl;
+        cout << "1. Attack" << endl;
+        cout << "2. Block" << endl;
+        cout << "3. Heal" << endl;
+
+        if(t_addOrRemove == ADD) 
+        { 
+            cout << "4. Switch to Remove" << endl;
+        }
+        else 
+        {
+            cout << "4. Switch to Add" << endl;
+        }
+        
+        cout << "5. Back" << endl;
+        cout << "Choice: ";
+        cin >> t_inputChar;
+
+        switch (t_inputChar)
+        {
+        case '1': 
+            if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_ATTACK_ID), BASIC_CARD_LIMIT))
+            {
+                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_ATTACK_ID));
+            }
+            else if (t_addOrRemove == ADD) // limit validation failed
+            {
+                cout << "Limit reached! Can't add anymore" << endl;
+                sleep(1);
+            }
+            else
+            {
+                deck->removeCard(to_string(BASIC_ATTACK_ID));
+            }
+            break;
+        case '2': 
+            if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_BLOCK_ID), BASIC_CARD_LIMIT))
+            {
+                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_BLOCK_ID));
+            }
+            else if (t_addOrRemove == ADD) // limit validation failed
+            {
+                cout << "Limit reached! Can't add anymore" << endl;
+                sleep(1);
+            }
+            else
+            {
+                deck->removeCard(to_string(BASIC_BLOCK_ID));
+            }
+            break;
+        case '3': 
+            if (t_addOrRemove == ADD && addCardValidation(deck, to_string(BASIC_HEAL_ID), BASIC_CARD_LIMIT))
+            {
+                deck->addToOringalDeck(ptr_masterCardList->at(BASIC_HEAL_ID));
+            }
+            else if (t_addOrRemove == ADD) // limit validation failed
+            {
+                cout << "Limit reached! Can't add anymore" << endl;
+                sleep(1);
+            }
+            else
+            {
+                deck->removeCard(to_string(BASIC_HEAL_ID));
+            }
+            break;
+        case '4': 
+            if(t_addOrRemove == ADD) 
+            { 
+                t_addOrRemove = REMOVE;
+                t_addOrRemoveStr = "Remove";
+            }
+            else 
+            {
+                t_addOrRemove = ADD;
+                t_addOrRemoveStr = "Add";
+            }
+            break;
+        case '5':
+            t_leaveLoop = true;
+            break;
+        default:
+            cout << endl;
+            cout << "Invalid Input" << endl;
+            sleep(2); //sleep for 2s
+            cardInformationMenu();
+            break;
+        } //eos
+    } //eow
+    
+} //eo addOrRmBasicCardMenu
+
+void GameMonitor::addOrRmAdvCardMenu(Deck *deck)
 {
+    string t_addOrRemoveStr = "Add";
+    int t_cardID = 0;
+    ADD_REMOVE t_addOrRemove = ADD;
+    bool t_leaveLoop = false;
+    
+    while (t_leaveLoop == false)
+    {
+        //clear console screen
+        system("cls"); 
 
-}
+        displayDeck(deck->getOriginalDeck());
+        cout << endl;
 
-void GameMonitor::removeCardMenu(Deck *deck)
-{
+        cout << "============ " << t_addOrRemoveStr << " Advanced Card ============" << endl;
+        cout << "1. Mighty Swing" << endl;
+        cout << "2. Double Strike" << endl;
+        cout << "3. Strike and Heal" << endl;
+        cout << "4. Double Block" << endl;
+        cout << "5. Block and Strike" << endl;
+        cout << "6. Block and Heal" << endl;
+        cout << "7. Super Heal" << endl;
+        cout << "8. Life Boost" << endl;
 
-}
+        if(t_addOrRemove == ADD) 
+        { 
+            cout << "9. Switch to Remove" << endl;
+        }
+        else 
+        {
+            cout << "9. Switch to Add" << endl;
+        }
+        
+        cout << "0. Back" << endl;
+        cout << "Choice: ";
+        cin >> t_inputChar;
+
+        switch (t_inputChar)
+        {
+        case '1': 
+            t_cardID = ADV_MIGHTY_SWING_ID;
+            break;
+        case '2': 
+            t_cardID = ADV_DOUBLE_STRIKE_ID;
+            break;
+        case '3': 
+            t_cardID = ADV_STRIKE_HEAL_ID;
+            break;
+        case '4': 
+            t_cardID = ADV_DOUBLE_BLOCK_ID;
+            break;
+        case '5': 
+            t_cardID = ADV_BLOCK_STRIKE_ID;
+            break;
+        case '6': 
+            t_cardID = ADV_BLOCK_HEAL_ID;
+            break;
+        case '7': 
+            t_cardID = ADV_SUPER_HEAL_ID;
+            break;
+        case '8': 
+            t_cardID = ADV_LIFE_BOOST_ID;
+            break;
+        case '9': 
+            if(t_addOrRemove == ADD) 
+            { 
+                t_addOrRemove = REMOVE;
+                t_addOrRemoveStr = "Remove";
+            }
+            else 
+            {
+                t_addOrRemove = ADD;
+                t_addOrRemoveStr = "Add";
+            }
+            break;
+        case '0':
+            t_leaveLoop = true;
+            break;
+        default:
+            cout << endl;
+            cout << "Invalid Input" << endl;
+            sleep(2); //sleep for 2s
+            cardInformationMenu();
+            break;
+        } //eos
+        // Want to go back, dont check to add/remove cards
+        if (t_leaveLoop == false)
+        {
+            if (t_addOrRemove == ADD && addCardValidation(deck, to_string(t_cardID), ADV_CARD_LIMIT))
+            {
+                deck->addToOringalDeck(ptr_masterCardList->at(t_cardID));
+            }
+            else if (t_addOrRemove == ADD) // limit validation failed
+            {
+                cout << "Limit reached! Can't add anymore" << endl;
+                sleep(1);
+            }
+            else
+            {
+                deck->removeCard(to_string(t_cardID));
+            }
+        }// eoi
+    } //eow
+} //eo addOrRmAdvCardMenu

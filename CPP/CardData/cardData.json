@@ -186,7 +186,7 @@
       "Description": "Expand your possible max life by one. This action is negated by an attack, just as a heal action would be. Afterwards, heal one life point."
     },
     {
-      "Name": "Flash Slash",
+      "Name": "Flash Strike",
       "ID": 2101,
       "Released": "RELEASED",
       "Rarity": "UNIQUE",
@@ -199,7 +199,7 @@
       "Description": "You may immediately play this card after you make a successful basic attack. Make an attack that deals one life damage. Alternatively, you may play this card as a basic attack card."
     },
     {
-      "Name": "Feint Slash",
+      "Name": "Feint Strike",
       "ID": 2102,
       "Released": "RELEASED",
       "Rarity": "UNIQUE",

@@ -19,6 +19,7 @@ private:
     map<int, Card>       *ptr_masterCardList;
     map<string, Profile> *ptr_profileDB;
 
+    // Set these bools if profile/deck is picked or created
     bool m_profileSet;
     bool m_deckSet;
     
@@ -28,7 +29,8 @@ public:
 
     // Helper functions
     void displayCardSet(Rarity rType);
-    void displayDeckCreation(vector<Card> cards);
+    void displayDeck(vector<Card> cards);
+    bool addCardValidation(Deck *deck, string cardID, uint8_t limit);
 
     // Menu functions
     void mainMenu();
@@ -44,10 +46,8 @@ public:
     void createDeckMenu();
 
     string editDeckNameMenu();
-    void addBasicCardMenu(Deck *deck);
-    void addAdvCardMenu(Deck *deck);
-    void removeCardMenu(Deck *deck);
-
+    void addOrRmBasicCardMenu(Deck *deck);
+    void addOrRmAdvCardMenu(Deck *deck);
 
 };
 
