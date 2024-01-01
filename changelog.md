@@ -21,6 +21,21 @@ Updates and working tasks
 - [x] Load profiles from main
 - [x] Add deck class
 
+## add-menus-profile-and-deck-creation
+- [ ] Add menus
+    - [ ] play game
+    - [x] load profile
+    - [x] change profile
+    - [x] new profile
+    - [x] card info
+    - [x] game rules
+    - [x] change deck
+    - [x] create deck
+- [x] Add card sorting for the deck
+
+## extern-card-and-profile-db
+- [x] Move db to global vars
+
 ## implement-battle
 - [ ] Add battle against rng bot
     - [ ] Add Battle Monitor class

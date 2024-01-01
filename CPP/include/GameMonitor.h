@@ -18,15 +18,12 @@ private:
     Profile       m_currProfile;
     Deck          m_currDeck;
 
-    map<int, Card>       *ptr_masterCardList;
-    map<string, Profile> *ptr_profileDB;
-
     // Set these bools if profile/deck is picked or created
     bool m_profileSet;
     bool m_deckSet;
     
 public:
-    GameMonitor(map<int, Card> *masterCardList, map<string, Profile> *profileDB);
+    GameMonitor();
     ~GameMonitor();
 
     // Helper functions

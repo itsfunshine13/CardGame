@@ -14,16 +14,16 @@ int main(){
 
   string tempFileString = "";
   
+
   cout << "TEST START" << endl;
 
-  // Load Data
-  loadCardData(tempFileString, &masterCardList, true);
-  loadProfileData(tempFileString, &profileDB, &masterCardList, true);
+  loadCardData(tempFileString, true);
+  loadProfileData(tempFileString, true);
 
   // Profile tmpProfile = profileDB.at("Funshine");
   // vector<Deck> tmpDeckList = tmpProfile.getAllDecks();
 
-  GameMonitor gm(&masterCardList, &profileDB);
+  GameMonitor gm;
   gm.mainMenu();
 
   cout << "TEST END" << endl;
