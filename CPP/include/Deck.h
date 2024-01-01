@@ -33,7 +33,7 @@ public:
     
     // 0 = original deck | 1 = playdeck
     void displayDeck(uint8_t choice);
-    void drawCard(Card *card);
+    Card drawCard();
 
     vector<Card> getPlayDeck();
     vector<Card> getOriginalDeck();

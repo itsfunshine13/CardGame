@@ -121,6 +121,22 @@ bool GameMonitor::addCardValidation(Deck *deck, string cardID, uint8_t limit)
     return (count < limit);
 }
 
+Deck GameMonitor::getRdmBotDeck()
+{
+    // Set current time as seed
+    srand(time(0));
+
+    int t_deckIdx;
+    vector<Deck> t_botDecks;
+
+    t_botDecks = ptr_profileDB->at(BOT_PROFILE_NAME).getAllDecks();
+
+    // Pick a random deck
+    t_deckIdx = rand() % int(t_botDecks.size());
+
+    return t_botDecks.at(t_deckIdx);
+} //eo getRdmBotDeck
+
 void GameMonitor::mainMenu()
 {
     //clear console screen
@@ -196,7 +212,7 @@ void GameMonitor::playGameMenu()
     }
 
     cout << endl;
-    cout << "1. Start" << endl;
+    cout << "1. Start Battle" << endl;
     cout << "2. Change Deck" << endl;
     cout << "3. Create Deck" << endl;
     cout << "4. Back" << endl;
@@ -207,9 +223,16 @@ void GameMonitor::playGameMenu()
     {
     // Start
     case '1': 
-        cout << endl;
-        cout << "NOT IMPLEMENTED" << endl;
-        sleep(1);
+        if (m_currDeck.getOriginalDeckSize() < DECK_SIZE_LIMIT)
+        {
+            cout << endl;
+            cout << "Loaded deck isn't complete!" << endl;
+            sleep(1);
+        }
+        else
+        {
+            m_battleMonitor.newBattle(m_currProfile, ptr_profileDB->at(BOT_PROFILE_NAME),m_currDeck, getRdmBotDeck());
+        }
         playGameMenu();
         break;
     // Change Deck

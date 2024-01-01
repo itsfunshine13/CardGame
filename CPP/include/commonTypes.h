@@ -4,4 +4,6 @@
 #define RETVAL_ERROR  -1
 #define RETVAL_OK      0
 
+#define BOT_PROFILE_NAME "Bot"
+
 #endif

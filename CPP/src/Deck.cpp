@@ -109,10 +109,11 @@ void Deck::displayDeck(uint8_t choice)
     }
 }
 
-void Deck::drawCard(Card *card)
+Card Deck::drawCard()
 {
-    card = &(this->playDeck.back());
+    Card card = this->playDeck.back();
     this->playDeck.pop_back();
+    return card;
 }
 
 vector<Card> Deck::getPlayDeck()

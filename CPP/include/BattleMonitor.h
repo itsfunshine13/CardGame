@@ -2,6 +2,7 @@
 #define BATTLE_MONITOR_H_
 
 #include "Deck.h"
+#include "Player.h"
 #include "Profile.h"
 
 #include <iostream>
@@ -12,10 +13,26 @@ using namespace std;
 class BattleMonitor
 {
 private:
-    /* data */
+    Profile m_palyerProfile;
+    Profile m_otherProfile;
+    Deck    m_playerDeck;
+    Deck    m_otherDeck;
+
+    Player m_player;
+    Player m_otherPlayer;
+
+
 public:
-    BattleMonitor(/* args */);
+    BattleMonitor();
     ~BattleMonitor();
+
+    void newBattle(Profile t_palyerProfile, 
+                   Profile t_otherProfile,
+                      Deck t_playerDeck, 
+                      Deck t_otherDeck);
+
+    // Helper functions
+    string fmtBattleRoundStr(string yourCard, string otherCard);
 };
 
 

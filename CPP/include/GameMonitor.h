@@ -3,6 +3,7 @@
 
 #include "Card.h"
 #include "Profile.h"
+#include "BattleMonitor.h"
 
 #include <string>
 #include <map>
@@ -13,8 +14,9 @@ using namespace std;
 class GameMonitor
 {
 private:
-    Profile m_currProfile;
-    Deck    m_currDeck;
+    BattleMonitor m_battleMonitor;
+    Profile       m_currProfile;
+    Deck          m_currDeck;
 
     map<int, Card>       *ptr_masterCardList;
     map<string, Profile> *ptr_profileDB;
@@ -31,6 +33,7 @@ public:
     void displayCardSet(Rarity rType);
     void displayDeck(vector<Card> cards);
     bool addCardValidation(Deck *deck, string cardID, uint8_t limit);
+    Deck getRdmBotDeck();
 
     // Menu functions
     void mainMenu();
@@ -38,13 +41,14 @@ public:
     void cardInformationMenu();
     void gameRulesMenu();
 
+    // Profile Menus
     void loadProfileMenu();
     void changeProfileMenu();
     void newProfileMenu();
 
+    // Deck Menus
     void changeDeckMenu();
     void createDeckMenu();
-
     string editDeckNameMenu();
     void addOrRmBasicCardMenu(Deck *deck);
     void addOrRmAdvCardMenu(Deck *deck);

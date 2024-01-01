@@ -4,7 +4,7 @@
   "Version": "1.0",
   "Card": [
     {
-      "Name": "Attack",
+      "Name": "CORE Attack",
       "ID": 1001,
       "Released": "RELEASED",
       "Rarity": "CORE",
@@ -17,7 +17,7 @@
       "Description": "Make an attack that deals one life damage"
     },
     {
-      "Name": "Defend",
+      "Name": "CORE Defend",
       "ID": 1002,
       "Released": "RELEASED",
       "Rarity": "CORE",
@@ -30,7 +30,7 @@
       "Description": "Block one attack action"
     },
     {
-      "Name": "Heal",
+      "Name": "CORE Heal",
       "ID": 1003,
       "Released": "RELEASED",
       "Rarity": "CORE",

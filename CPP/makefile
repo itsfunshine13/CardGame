@@ -15,12 +15,14 @@ CFLAGS = -Wall -g
 
 # define any directories containing header files other than /usr/include
 #
+INCLUDES += include/BattleMonitor.h
 INCLUDES  = include/Card.h
 INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
 INCLUDES += include/Deck.h
 INCLUDES += include/fileUtils.h
 INCLUDES += include/GameMonitor.h
+INCLUDES += include/Player.h
 INCLUDES += include/Profile.h
 INCLUDES += include/versions.h
 INCLUDES += include/versionTypes.h
@@ -37,10 +39,12 @@ LIBS = -ljsoncpp
 
 # define the C source files
 SRCS += json/jsoncpp.cpp
+SRCS += src/BattleMonitor.cpp
 SRCS += src/Card.cpp
 SRCS += src/Deck.cpp
 SRCS += src/GameMonitor.cpp
 SRCS += src/main.cpp
+SRCS += src/Player.cpp
 SRCS += src/Profile.cpp
 
 # define the C object files

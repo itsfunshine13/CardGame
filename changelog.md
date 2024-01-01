@@ -23,3 +23,6 @@ Updates and working tasks
 
 ## implement-battle
 - [ ] Add battle against rng bot
+    - [ ] Add Battle Monitor class
+    - [ ] Add Player Class
+- [ ] Implement func pointer action queue 
