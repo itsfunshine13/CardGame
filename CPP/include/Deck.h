@@ -22,6 +22,7 @@ public:
 
     void setDeckName(string deckName);
     void setDeckSizeLimit(uint8_t deckSizeLimit);
+    void overWriteOriginalDeck(vector<Card> newDeck);
 
     void addToOringalDeck(Card card);
     int  removeCard(string cardID);
@@ -29,7 +30,8 @@ public:
     void rebuildPlayDeck();
     void shufflePlayDeck();
     void sortDeck();
-
+    
+    // 0 = original deck | 1 = playdeck
     void displayDeck(uint8_t choice);
     void drawCard(Card *card);
 

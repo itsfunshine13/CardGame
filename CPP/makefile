@@ -20,6 +20,7 @@ INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
 INCLUDES += include/Deck.h
 INCLUDES += include/fileUtils.h
+INCLUDES += include/GameMonitor.h
 INCLUDES += include/Profile.h
 INCLUDES += include/versions.h
 INCLUDES += include/versionTypes.h
@@ -38,6 +39,7 @@ LIBS = -ljsoncpp
 SRCS += json/jsoncpp.cpp
 SRCS += src/Card.cpp
 SRCS += src/Deck.cpp
+SRCS += src/GameMonitor.cpp
 SRCS += src/main.cpp
 SRCS += src/Profile.cpp
 
