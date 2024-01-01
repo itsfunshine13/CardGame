@@ -20,3 +20,6 @@ Updates and working tasks
 - [x] Add profile class
 - [x] Load profiles from main
 - [x] Add deck class
+
+## implement-battle
+- [ ] Add battle against rng bot
