@@ -38,6 +38,11 @@ Updates and working tasks
 
 ## implement-battle
 - [ ] Add battle against rng bot
-    - [ ] Add Battle Monitor class
-    - [ ] Add Player Class
+- [x] Add Battle Monitor class
+    - [x] display round screen, hand, hp
+    - [x] input validation for picking cards to play
+- [x] Fix shuffle
+- [x] Add discard pile and reshuffle discard pile to playdeck
+- [x] Add Player Class
+    - [x] implement player hand
 - [ ] Implement func pointer action queue 
