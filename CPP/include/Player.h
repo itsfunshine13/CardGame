@@ -25,6 +25,7 @@ public:
     ~Player();
 
     Deck* getDeck();
+    string getPlayerName();
     int  getHP();
     void resetHP();
     void increaseMaxHP(int amt);

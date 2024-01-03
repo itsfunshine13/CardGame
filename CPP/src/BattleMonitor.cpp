@@ -59,24 +59,10 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
     this->m_otherPlayer.initHand();
     this->m_otherPlayer.fillHand();
 
+    // BATTLE LOOP
     while (t_battleEnd == false)
     {
-        //clear console screen
-        system("cls");
-
-        cout << "Profile: " << t_palyerProfile.getProfileName() << endl;
-        cout << "   Deck: " << t_playerDeck.getDeckName() << endl;
-        cout << endl;
-        cout << "========================================" << endl;
-        cout << "You - " << this->m_player.getHP() << " HP           |Bot - " << this->m_otherPlayer.getHP() << "HP" << endl;
-        cout << "1. " << fmtBattleRoundStr(t_playerCardsPlayed[0], t_otherCardsPlayed[0]) << endl;
-        cout << "2. " << fmtBattleRoundStr(t_playerCardsPlayed[1], t_otherCardsPlayed[1]) << endl;
-        cout << "3. " << fmtBattleRoundStr(t_playerCardsPlayed[2], t_otherCardsPlayed[2]) << endl;
-        cout << "4. " << fmtBattleRoundStr(t_playerCardsPlayed[3], t_otherCardsPlayed[3]) << endl;
-        cout << "5. " << fmtBattleRoundStr(t_playerCardsPlayed[4], t_otherCardsPlayed[4]) << endl;
-        cout << endl;
-        cout << "Your Cards:" << endl;
-        this->m_player.displayHand();
+        displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
         cout << endl;
         cout << "0. Quit Battle" << endl; 
         cout << "Play Card: ";
@@ -113,14 +99,61 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
                 sleep(2); //sleep for 2s
             }  
         }
-        
+        // Reset everything for new round
         if(this->m_currPhaseNumber > DEFAULT_MAX_PHASE)
         {
-            // Reset everything
+            displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
+            sleep(3);
+
+            this->m_currPhaseNumber = 1;
+            this->m_player.fillHand();
+            this->m_otherPlayer.fillHand();
+
+            for (int i = 0; i < 5; i++)
+            {
+                t_playerCardsPlayed[i] = "";
+                t_otherCardsPlayed[i]  = "";
+            }//eof
+            
         }
+
+        // CHECK FOR PLAYER DEFEAT
+        if (this->m_player.getHP() == 0)
+        {
+            cout << this->m_otherProfile.getProfileName() << " WINS" << endl;
+            sleep(3);
+            t_battleEnd = true;
+        }
+        else if (this->m_otherPlayer.getHP() == 0)
+        {
+            cout << this->m_palyerProfile.getProfileName() << " WINS" << endl;
+            sleep(3);
+            t_battleEnd = true;
+        }
+        
     } //eow
     
-} //eo newBattle
+}//eo newBattle
+
+void BattleMonitor::displayBattleScreen(string t_playerCardsPlayed[5], string  t_otherCardsPlayed[5])
+{
+    //clear console screen
+    system("cls");
+
+    cout << "Profile: " << this->m_player.getPlayerName() << endl;
+    cout << "   Deck: " << this->m_player.getDeck()->getDeckName() << endl;
+    cout << endl;
+    cout << "========================================" << endl;
+    cout << "You - " << this->m_player.getHP() << " HP           | Bot - " << this->m_otherPlayer.getHP() << "HP" << endl;
+    cout << "1. " << fmtBattleRoundStr(t_playerCardsPlayed[0], t_otherCardsPlayed[0]) << endl;
+    cout << "2. " << fmtBattleRoundStr(t_playerCardsPlayed[1], t_otherCardsPlayed[1]) << endl;
+    cout << "3. " << fmtBattleRoundStr(t_playerCardsPlayed[2], t_otherCardsPlayed[2]) << endl;
+    cout << "4. " << fmtBattleRoundStr(t_playerCardsPlayed[3], t_otherCardsPlayed[3]) << endl;
+    cout << "5. " << fmtBattleRoundStr(t_playerCardsPlayed[4], t_otherCardsPlayed[4]) << endl;
+    cout << endl;
+    cout << "Your Cards:" << endl;
+    this->m_player.displayHand();
+}//eo displayBattleScreen
 
 string BattleMonitor::fmtBattleRoundStr(string yourCard, string otherCard)
 {
@@ -160,14 +193,24 @@ Card BattleMonitor::getPlayedCardOther()
 {
     Card retCard;
     int  t_handIdx;
-    bool mustPlayCore = ((m_CCRemainingOther) <= ((DEFAULT_MAX_PHASE-this->m_currPhaseNumber)+1));
+    int remainingPhases = (DEFAULT_MAX_PHASE-this->m_currPhaseNumber)+1;
+    bool mustPlayCore = (m_CCRemainingOther == remainingPhases);
     bool findNewCard = true;
 
     while (findNewCard)
     {
         t_handIdx = rand() % int(this->m_otherPlayer.getHand().size());
         retCard = this->m_otherPlayer.getHand().at(t_handIdx);
-        findNewCard = false;
+
+        if(mustPlayCore && retCard.isCore())
+        {
+            findNewCard = false;
+        }
+        else if(mustPlayCore == false)
+        {
+            findNewCard = false;
+        }
+        
     } //eow
     return retCard;
 } //eo getOtherPlayerCard

@@ -12,6 +12,7 @@ class Deck
 private:
     vector<Card> playDeck;
     vector<Card> originalDeck;
+    vector<Card> discardPile;
     uint8_t deckSizeLimit;
     string deckName;
 
@@ -41,6 +42,8 @@ public:
     int getRemainingCardsSize();
     int getDeckSizeLimit();
     string getDeckName();
+    void sendToDiscardPile(Card card);
+    void discardPileToDeck();
 
 };
 

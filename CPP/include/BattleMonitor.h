@@ -41,6 +41,7 @@ public:
     void procBattle(Card playerCard, Card otherCard);
 
     // Helper functions
+    void displayBattleScreen(string t_playerCardsPlayed[5], string  t_otherCardsPlayed[5]);
     string fmtBattleRoundStr(string yourCard, string otherCard);
     bool validatePlayerCardPick(char t_inputChar, bool *mustPlayCore);
     Card getPlayedCardOther();

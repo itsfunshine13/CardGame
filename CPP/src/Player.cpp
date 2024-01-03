@@ -37,6 +37,11 @@ Deck* Player::getDeck()
     return &(this->m_playerDeck);
 } //eo getDeck
 
+string Player::getPlayerName()
+{
+    return this->m_playerName;
+} //eo getPlayerName
+
 int Player::getHP()
 {
     return this->m_healthPoints;
@@ -60,6 +65,8 @@ void Player::initHand()
     this->m_hand.push_back(masterCardList.at(CORE_HEAL_ID));
 } // eo initHand
 
+
+// add check for if theres enough cards to draw
 void Player::fillHand()
 {
     while(this->m_hand.size() < DEFAULT_HAND_SIZE)

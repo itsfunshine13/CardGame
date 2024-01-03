@@ -119,8 +119,15 @@ void Deck::displayDeck(uint8_t choice)
 
 Card Deck::drawCard()
 {
+    // Add discard pile back to deck and shuffle if no cards to draw
+    if (this->playDeck.size() == 0)
+    {
+        discardPileToDeck();
+        shufflePlayDeck();
+    }
     Card card = this->playDeck.back();
     this->playDeck.pop_back();
+    this->discardPile.push_back(card);
     return card;
 }
 
@@ -152,4 +159,19 @@ int Deck::getDeckSizeLimit()
 string Deck::getDeckName()
 {
     return this->deckName;
+}
+
+void Deck::sendToDiscardPile(Card card)
+{
+    this->discardPile.push_back(card);
+}
+
+void Deck::discardPileToDeck()
+{
+    for (uint8_t i = this->discardPile.size()-1; i >= 0 ; i--)
+    {
+        this->playDeck.push_back(this->discardPile[i]);
+        this->discardPile.pop_back();
+    }//eof
+    
 }
