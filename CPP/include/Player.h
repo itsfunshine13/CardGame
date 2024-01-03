@@ -12,23 +12,28 @@ using namespace std;
 class Player
 {
 private:
-    uint8_t m_healthPoints;
+    int m_healthPoints;
+    int m_maxHP;
     string  m_playerName;
     Deck    m_playerDeck;
 
     vector<Card> m_hand;
 
 public:
-    Player(string m_playerName, Deck m_playerDeck, uint8_t m_healthPoints);
+    Player(string m_playerName, Deck m_playerDeck, int m_healthPoints);
     Player();
     ~Player();
 
-    uint8_t getHP();
     Deck* getDeck();
+    int  getHP();
+    void resetHP();
+    void increaseMaxHP(int amt);
 
     void initHand();
     void fillHand();
     void displayHand();
+    vector<Card> getHand();
+    Card playCard(int t_cardIdx);
 };
 
 

@@ -12,6 +12,8 @@ map<string, Profile> profileDB;
 
 int main(){
 
+  srand(time(NULL));
+  
   string tempFileString = "";
   
 

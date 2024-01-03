@@ -127,7 +127,7 @@ Deck GameMonitor::getRdmBotDeck()
     int t_deckIdx;
     vector<Deck> t_botDecks;
 
-    t_botDecks = ptr_profileDB->at(BOT_PROFILE_NAME).getAllDecks();
+    t_botDecks = profileDB.at(BOT_PROFILE_NAME).getAllDecks();
 
     // Pick a random deck
     t_deckIdx = rand() % int(t_botDecks.size());
@@ -229,7 +229,7 @@ void GameMonitor::playGameMenu()
         }
         else
         {
-            m_battleMonitor.newBattle(m_currProfile, ptr_profileDB->at(BOT_PROFILE_NAME),m_currDeck, getRdmBotDeck());
+            m_battleMonitor.newBattle(m_currProfile, profileDB.at(BOT_PROFILE_NAME),m_currDeck, getRdmBotDeck());
         }
         playGameMenu();
         break;
@@ -330,10 +330,10 @@ void GameMonitor::gameRulesMenu()
     cout << "Unplayed cards are kept in your hand." << endl << endl;
 
     cout << "======== FIGHTING ========" << endl;
-    cout << "Each round has 5 battles, in which only 1 card is played. However, all 3 Core cards MUST be played." << endl;
+    cout << "Each round has 5 phases, in which only 1 card is played. However, all 3 Core cards MUST be played." << endl;
     cout << "The order in which you play your Core cards does not matter, but all must be played within the 5 battles." << endl << endl;
     
-    cout << "After all 5 battles have been played, send all non Core cards to the discard pile and start a new round." << endl;
+    cout << "After all 5 phases have been played, send all non Core cards to the discard pile and start a new round." << endl;
     cout << "The 3 Core cards are added back to your hand and then draw cards from your deck to have 7 cards in your hand." << endl << endl;
 
     cout << "======== MISC ========" << endl;

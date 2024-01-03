@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#define DEFAULT_MAX_PHASE 5
+
 class BattleMonitor
 {
 private:
@@ -21,6 +23,11 @@ private:
     Player m_player;
     Player m_otherPlayer;
 
+    uint8_t m_currPhaseNumber;
+    uint8_t m_CCRemainingPlayer;
+    uint8_t m_CCRemainingOther;
+    Card    m_playerPlayedCard;
+    Card    m_otherPlayedCard;
 
 public:
     BattleMonitor();
@@ -31,8 +38,12 @@ public:
                       Deck t_playerDeck, 
                       Deck t_otherDeck);
 
+    void procBattle(Card playerCard, Card otherCard);
+
     // Helper functions
     string fmtBattleRoundStr(string yourCard, string otherCard);
+    bool validatePlayerCardPick(char t_inputChar, bool *mustPlayCore);
+    Card getPlayedCardOther();
 };
 
 

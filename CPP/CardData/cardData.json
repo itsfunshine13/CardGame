@@ -90,7 +90,7 @@
       "Class": "None",
       "Subclass": "SPECIAL",
       "Deck Limit": 2,
-      "First Action": "Attack",
+      "First Action": "Attack_MS",
       "Second Action": "None",
       "Description": "Make an attack that deals 2 damage. However, if Hit against a Heal, Mighty Swing deals 3 damage instead!"
     },
@@ -181,7 +181,7 @@
       "Class": "None",
       "Subclass": "SPECIAL",
       "Deck Limit": 2,
-      "First Action": "Special",
+      "First Action": "Heal_LB",
       "Second Action": "Heal",
       "Description": "Expand your possible max life by one. This action is negated by an attack, just as a heal action would be. Afterwards, heal one life point."
     },

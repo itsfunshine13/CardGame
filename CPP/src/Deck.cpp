@@ -73,10 +73,18 @@ void Deck::rebuildPlayDeck()
 
 void Deck::shufflePlayDeck()
 {
-    srand(time(NULL));
+    Card temp;
+    int tempIdx;
 
-    auto rng = std::default_random_engine {};
-    std::shuffle(begin(this->playDeck), end(this->playDeck), rng);
+    // swap each card in deck
+    for (int i = 0; i < int(this->playDeck.size()); i++)
+    {
+        tempIdx = rand() % int(this->playDeck.size());
+        temp = this->playDeck[i];
+        this->playDeck[i] = this->playDeck[tempIdx];
+        this->playDeck[tempIdx] = temp;
+    }//eof
+    
 }
 
 void Deck::sortDeck()
