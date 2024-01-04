@@ -45,6 +45,7 @@ public:
     string fmtBattleRoundStr(string yourCard, string otherCard);
     bool validatePlayerCardPick(char t_inputChar, bool *mustPlayCore);
     Card getPlayedCardOther();
+
 };
 
 

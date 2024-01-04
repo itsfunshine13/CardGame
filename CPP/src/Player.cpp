@@ -53,11 +53,6 @@ void Player::resetHP()
     this->m_maxHP        = DEFAULT_MAX_HP;
 } //eo resetHP
 
-void Player::increaseMaxHP(int amt)
-{
-    this->m_maxHP += amt;
-} //eo increaseMaxHP
-
 void Player::initHand()
 {
     this->m_hand.push_back(masterCardList.at(CORE_ATTACK_ID));
@@ -97,3 +92,18 @@ Card Player::playCard(int t_cardIdx)
     this->m_hand.erase(this->m_hand.begin()+t_cardIdx);
     return retCard;
 } //eo playCard
+
+void Player::takeDmg(int amt)
+{
+    this->m_healthPoints -= amt;
+} //eo takeDmg
+
+void Player::heal(int amt)
+{
+    this->m_healthPoints += amt;
+} //eo heal
+
+void Player::increaseMaxHP(int amt)
+{
+    this->m_maxHP += amt;
+} //eo increaseMaxHP

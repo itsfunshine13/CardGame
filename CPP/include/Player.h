@@ -28,13 +28,17 @@ public:
     string getPlayerName();
     int  getHP();
     void resetHP();
-    void increaseMaxHP(int amt);
 
     void initHand();
     void fillHand();
     void displayHand();
     vector<Card> getHand();
     Card playCard(int t_cardIdx);
+
+    // Battle Actions
+    void takeDmg(int amt);
+    void heal(int amt);
+    void increaseMaxHP(int amt);
 };
 
 

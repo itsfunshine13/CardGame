@@ -28,6 +28,9 @@ int main(){
   GameMonitor gm;
   gm.mainMenu();
 
+  // cout << "core attack 1st action: " << masterCardList.at(CORE_ATTACK_ID).getFirstAction() << endl;
+  // cout << "core attack 2nd action: " << masterCardList.at(CORE_ATTACK_ID).getSecondAction() << endl;
+
   cout << "TEST END" << endl;
 
   return 0;
