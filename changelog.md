@@ -22,8 +22,8 @@ Updates and working tasks
 - [x] Add deck class
 
 ## add-menus-profile-and-deck-creation
-- [ ] Add menus
-    - [ ] play game
+- [x] Add menus
+    - [x] play game
     - [x] load profile
     - [x] change profile
     - [x] new profile
@@ -45,4 +45,8 @@ Updates and working tasks
 - [x] Add discard pile and reshuffle discard pile to playdeck
 - [x] Add Player Class
     - [x] implement player hand
-- [x] Implement func pointer action queue 
+- [x] Implement func pointer action queue
+
+## refactor-action-switch-with-lut
+- [ ] Implment Action 1 look-up-table
+- [ ] Implment Action 2 look-up-table
