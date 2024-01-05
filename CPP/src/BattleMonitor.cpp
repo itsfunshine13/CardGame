@@ -25,19 +25,16 @@ static string t_inputStr;
 void TakeDmg(Player *player, int amt)
 {
     player->takeDmg(amt);
-    cout << player->getPlayerName() << "taking dmg: " << amt << endl;
 } //eo takeDmg
 
 void Heal(Player *player, int amt)
 {
     player->heal(amt);
-    cout << player->getPlayerName() << "healing: " << amt << endl;
 } //eo heal
 
 void IncreaseMaxHP(Player *player, int amt)
 {
     player->increaseMaxHP(amt);
-    cout << player->getPlayerName() << "incr HP: " << amt << endl;
 } //eo increaseMaxHP
 
 BattleMonitor::BattleMonitor() {}
@@ -49,6 +46,9 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
     // Temp Battle variables
     bool    t_battleEnd     = false;
     bool    t_mustPlayCore  = false;
+
+    this->m_palyerProfile = t_palyerProfile;
+    this->m_otherProfile  = t_otherProfile;
     
     this->m_currPhaseNumber       = 1;
     this->m_CCRemainingPlayer = 3;
@@ -82,6 +82,9 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
     // BATTLE LOOP
     while (t_battleEnd == false)
     {
+        //clear console screen
+        system("cls"); 
+        
         displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
         cout << endl;
         cout << "0. Quit Battle" << endl; 
@@ -107,7 +110,7 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
             this->m_currPhaseNumber++;
 
             // Process Battle Phase
-             procBattle(t_playedCardPlayer, t_playedCardOther);
+            procBattle(t_playedCardPlayer, t_playedCardOther);
         }
         else
         {
@@ -125,6 +128,9 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
         // Reset everything for new round
         if(this->m_currPhaseNumber > DEFAULT_MAX_PHASE)
         {
+            //clear console screen
+            system("cls"); 
+
             displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
             sleep(3);
 
@@ -146,12 +152,20 @@ void BattleMonitor::newBattle(Profile t_palyerProfile, Profile t_otherProfile, D
         // CHECK FOR PLAYER DEFEAT
         if (this->m_player.getHP() == 0)
         {
+            //clear console screen
+            system("cls"); 
+            displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
+            
             cout << this->m_otherProfile.getProfileName() << " WINS" << endl;
             sleep(3);
             t_battleEnd = true;
         }
         else if (this->m_otherPlayer.getHP() == 0)
         {
+            //clear console screen
+            system("cls"); 
+            displayBattleScreen(t_playerCardsPlayed, t_otherCardsPlayed);
+
             cout << this->m_palyerProfile.getProfileName() << " WINS" << endl;
             sleep(3);
             t_battleEnd = true;
@@ -173,25 +187,11 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
     t_actionList[0] = pair<Action,Action>(playerCard.getFirstAction(), otherCard.getFirstAction());
     t_actionList[1] = pair<Action,Action>(playerCard.getSecondAction(), otherCard.getSecondAction());
 
-    cout << "Player card: " << playerCard.getCardName() << endl;
-    cout << "Other  card: " << otherCard.getCardName()  << endl << endl;
-
-    cout << "Player Action 1: " << t_actionList[0].first << endl;
-    cout << "Other  Action 1: " << t_actionList[0].second << endl << endl;
-
-    cout << "Player Action 2: " << t_actionList[1].first << endl;
-    cout << "Other  Action 2: " << t_actionList[1].second << endl;
-
-    cout << "press any key to continue" << endl;
-    cin >> t_inputChar;
-
+    // Clear queue
     actionQueue = emptyQueue;
 
     for (int actionIdx = 0; actionIdx < TOTAL_CARD_ACTIONS; actionIdx++)
     {
-        cout << "processing action : " << actionIdx << endl;
-        cout << "t_actionList[actionIdx].first: " << t_actionList[actionIdx].first << endl;
-        cout << "t_actionList[actionIdx].second: " << t_actionList[actionIdx].second << endl;
         switch (t_actionList[actionIdx].first)
         {
         case ATTACK_ACTION:
@@ -225,26 +225,22 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                         pairQueue.push(pair<Player*, int>(&this->m_player,      1));
                         pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                     }
-                    cout << "attack vs attack, push back 2" << endl;
                     ActionPtr = TakeDmg;
                     actionQueue.push(ActionPtr);
                     actionQueue.push(ActionPtr);
                     break;
                 case DEFEND_ACTION:
                     // Attack vs Block - Do nothing
-                    cout << "attack vs defend" << endl;
                     break;
                 case HEAL_ACTION:
                     // Mighty Swing vs Heal
                     if ((playerCard.getID().compare(to_string(ADV_MIGHTY_SWING_ID)) == 0))
                     {
-                        cout << "MS vs heal" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 3));
                     }
                     // Attack vs Heal
                     else
                     {
-                        cout << "attack vs heal" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                     }
                     ActionPtr = TakeDmg;
@@ -252,7 +248,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     break;
                 case NO_ACTION:
                     // 2nd Action Attack vs 2nd Action None
-                    cout << "attack vs none" << endl;
                     pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                     ActionPtr = TakeDmg;
                     actionQueue.push(ActionPtr);
@@ -274,7 +269,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     // Block vs Super Heal
                     if ((otherCard.getID().compare(to_string(ADV_SUPER_HEAL_ID)) == 0))
                     {
-                        cout << "block vs super heal" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 2));
                         ActionPtr = Heal;
                         actionQueue.push(ActionPtr);
@@ -285,7 +279,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                         // First action
                         if (actionIdx == 0)
                         {
-                            cout << "block vs life boost action 1" << endl;
                             pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                             ActionPtr = IncreaseMaxHP;
                             actionQueue.push(ActionPtr);
@@ -293,7 +286,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                         // Second action
                         else
                         {
-                            cout << "block vs life boost action 1=2" << endl;
                             pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                             ActionPtr = Heal;
                             actionQueue.push(ActionPtr);
@@ -302,7 +294,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     // Block vs Heal
                     else
                     {
-                        cout << "block vs heal" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                         ActionPtr = Heal;
                         actionQueue.push(ActionPtr);
@@ -329,7 +320,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     {
                         pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                     }
-                    cout << "heal vs attack" << endl;
                     ActionPtr = TakeDmg;
                     actionQueue.push(ActionPtr);
                     break;
@@ -337,7 +327,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     // Super Heal vs Block
                     if ((playerCard.getID().compare(to_string(ADV_SUPER_HEAL_ID)) == 0))
                     {
-                        cout << "super heal vs block" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_player, 2));
                         ActionPtr = Heal;
                         actionQueue.push(ActionPtr);
@@ -348,7 +337,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                         // First action
                         if (actionIdx == 0)
                         {
-                            cout << "life boost vs block 1st action" << endl;
                             pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                             ActionPtr = IncreaseMaxHP;
                             actionQueue.push(ActionPtr);
@@ -356,7 +344,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                         // Second action
                         else
                         {
-                            cout << "life boost vs block 2nd action" << endl;
                             pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                             ActionPtr = Heal;
                             actionQueue.push(ActionPtr);
@@ -365,7 +352,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     // Heal vs Block
                     else
                     {
-                        cout << "heal vs block" << endl;
                         pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                         ActionPtr = Heal;
                         actionQueue.push(ActionPtr);
@@ -373,7 +359,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     break;
                 case HEAL_ACTION:
                     // Super Heal -  Player
-                    cout << "heal vs heal" << endl;
                     if ((playerCard.getID().compare(to_string(ADV_SUPER_HEAL_ID)) == 0))
                     { 
                         pairQueue.push(pair<Player*, int>(&this->m_player, 2));
@@ -440,7 +425,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     break;
                 case NO_ACTION:
                     // Heal vs 2nd Action
-                    cout << "heal vs no action" << endl;
                     pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                     ActionPtr = Heal;
                     actionQueue.push(ActionPtr);
@@ -458,7 +442,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
              switch (t_actionList[actionIdx].second)
             {
                 case ATTACK_ACTION:
-                    cout << "no action vs attack" << endl;
                     // 2nd Action None vs Attack
                     pairQueue.push(pair<Player*, int>(&this->m_player, 1));
                     ActionPtr = TakeDmg;
@@ -469,7 +452,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
                     break;
                 case HEAL_ACTION:
                     // 2nd Action None vs Heal
-                    cout << "no action vs heal" << endl;
                     pairQueue.push(pair<Player*, int>(&this->m_otherPlayer, 1));
                     ActionPtr = Heal;
                     actionQueue.push(ActionPtr);
@@ -485,7 +467,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
 
     }//eof 
     
-    cout << "action queue size: " << actionQueue.size() << endl;
     // loop through action queue and exec actions
     while (actionQueue.empty() == false)
     {
@@ -493,9 +474,6 @@ void BattleMonitor::procBattle(Card playerCard, Card otherCard)
         pair<Player*, int> info = pairQueue.front();
         // Get action pointer and exec action
         ActionPtr = actionQueue.front();
-        cout << endl << "EXEC ACTION" << endl;
-        cout << "player: " << info.first->getPlayerName() << endl;
-
         ActionPtr(info.first, info.second);
 
         // Pop action off from queue
@@ -555,11 +533,6 @@ bool BattleMonitor::validatePlayerCardPick(char t_inputChar, bool *mustPlayCore)
     {
         *mustPlayCore = true;
     }
-    cout << "input validation returning false" << endl;
-    cout << "t_inputChar: " << t_inputChar << endl;
-    cout << "t_handIdx: " << t_handIdx << endl;
-    cout << "m_CCRemainingPlayer: " << m_CCRemainingPlayer << endl;
-    cout << "remainingPhases: " << remainingPhases << endl;
     return false;
 } //eo validateCardPick
 

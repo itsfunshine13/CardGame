@@ -110,7 +110,6 @@ void Deck::displayDeck(uint8_t choice)
         return;
     }
 
-    cout << "printing decklist" << endl;
     for (uint8_t i = 0; i < deck.size(); i++)
     {
         cout << (i+1) << ". " + deck.at(i).getCardName() << endl;
