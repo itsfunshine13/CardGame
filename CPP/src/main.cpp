@@ -7,6 +7,8 @@
 
 using namespace std;
 
+extern VersionData cardlistVersion;
+
 map<int, Card> masterCardList;
 map<string, Profile> profileDB;
 
@@ -18,6 +20,8 @@ int main(){
 
   loadCardData(tempFileString, true);
   loadProfileData(tempFileString, true);
+
+  masterCardList.at(ADV_MIGHTY_SWING_ID).printCard();
 
   GameMonitor gm;
   gm.mainMenu();

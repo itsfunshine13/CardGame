@@ -16,6 +16,7 @@
 using namespace std;
 
 // Define Global variables
+extern VersionData cardlistVersion;
 extern map<int, Card> masterCardList;
 extern map<string, Profile> profileDB;
 
@@ -33,8 +34,6 @@ const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/player_profiles.json";
 //   Reads cardData.json and builds card database stored into a map
 void loadCardData(string filePath, bool useDefaultFile)
 {
-  VersionData *cardVersionPtr = &cardlistVersion;
-
   if (useDefaultFile == true)
   {
     filePath = DEFAULT_CARD_LIST_FILE;
@@ -55,9 +54,9 @@ void loadCardData(string filePath, bool useDefaultFile)
   }
 
   /* Read Version of card data */
-  cardVersionPtr->versionDescription = root["Data Description"].asString();
-  cardVersionPtr->release = root["Release"].asString();
-  cardVersionPtr->version = root["Version"].asString();
+  cardlistVersion.versionDescription = root["Data Description"].asString();
+  cardlistVersion.release = root["Release"].asString();
+  cardlistVersion.version = root["Version"].asString();
 
   /* Read cards */
   const Json::Value cardRoot = root["Card"];
