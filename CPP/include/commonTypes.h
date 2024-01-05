@@ -6,6 +6,7 @@
 
 #define BOT_PROFILE_NAME "Bot"
 
+#define DEFAULT_MAX_PHASE 5
 #define DEFAULT_HAND_SIZE  7
 #define DEFAULT_HP     5
 #define DEFAULT_MAX_HP 5

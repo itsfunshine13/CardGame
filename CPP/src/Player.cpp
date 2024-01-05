@@ -64,6 +64,13 @@ void Player::initHand()
 // add check for if theres enough cards to draw
 void Player::fillHand()
 {
+    // if end of a round, add core cards back
+    if (this->m_hand.size() == (DEFAULT_HAND_SIZE - DEFAULT_MAX_PHASE))
+    {
+        this->m_hand.push_back(masterCardList.at(CORE_ATTACK_ID));
+        this->m_hand.push_back(masterCardList.at(CORE_BLOCK_ID));
+        this->m_hand.push_back(masterCardList.at(CORE_HEAL_ID));
+    }
     while(this->m_hand.size() < DEFAULT_HAND_SIZE)
     {
         this->m_hand.push_back(this->m_playerDeck.drawCard());
@@ -100,7 +107,11 @@ void Player::takeDmg(int amt)
 
 void Player::heal(int amt)
 {
-    this->m_healthPoints += amt;
+    // Check that you're not healing over max
+    if (this->m_healthPoints != this->m_maxHP)
+    {
+        this->m_healthPoints += amt;
+    }
 } //eo heal
 
 void Player::increaseMaxHP(int amt)

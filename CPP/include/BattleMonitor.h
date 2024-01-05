@@ -10,8 +10,6 @@
 
 using namespace std;
 
-#define DEFAULT_MAX_PHASE 5
-
 class BattleMonitor
 {
 private:

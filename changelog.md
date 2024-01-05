@@ -37,7 +37,7 @@ Updates and working tasks
 - [x] Move db to global vars
 
 ## implement-battle
-- [ ] Add battle against rng bot
+- [x] Add battle against rng bot
 - [x] Add Battle Monitor class
     - [x] display round screen, hand, hp
     - [x] input validation for picking cards to play
@@ -45,4 +45,4 @@ Updates and working tasks
 - [x] Add discard pile and reshuffle discard pile to playdeck
 - [x] Add Player Class
     - [x] implement player hand
-- [ ] Implement func pointer action queue 
+- [x] Implement func pointer action queue 

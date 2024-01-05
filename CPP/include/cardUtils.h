@@ -15,7 +15,7 @@ Action stringToEnumAction(string action)
   {
     retVal = ATTACK_ACTION;
   }
-  else if (action.compare("Defend") == 0)
+  else if (action.compare("Block") == 0)
   {
     retVal = DEFEND_ACTION;
   }
