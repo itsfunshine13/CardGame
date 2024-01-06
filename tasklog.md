@@ -1,4 +1,4 @@
-# Change Log
+# Task Log
 
 Updates and working tasks
 
@@ -59,4 +59,8 @@ Updates and working tasks
 ## implement-multiple-save-files
 - [ ] Add feature for multiple save files
 - [ ] Add loading of different save files
-- [ ] Add continue last save file 
+- [ ] Add continue last save file
+
+## add-edit-and-remove-deck-options
+- [ ] Add edit current deck choice
+- [ ] Add delete current deck choice
