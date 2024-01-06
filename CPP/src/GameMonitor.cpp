@@ -4,6 +4,9 @@
 #include "../include/cardTypes.h"
 #include "../include/commonTypes.h"
 
+#include "../json/json/json.h"
+
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <unistd.h>
@@ -11,6 +14,8 @@
 #include <stdlib.h> 
 
 using namespace std;
+
+#define SAVE_ALL_PATH "./Profiles/profiles_save_file.json"
 
 // Define Global variables
 extern map<int, Card> masterCardList;
@@ -135,6 +140,100 @@ Deck GameMonitor::getRdmBotDeck()
     return t_botDecks.at(t_deckIdx);
 } //eo getRdmBotDeck
 
+// Basic Cards: choice = 0 | Adv Cards: choice = 0
+string GameMonitor::cardVectorToJsonStr(vector<Card> cards, int choice)
+{
+    string retString = "[";
+
+    
+    // Basic Cards
+    if (choice == 0)
+    {
+        retString.append(cards[0].getID());
+        for (int i = 1; i < int(cards.size()-10); i++)
+        {
+            retString.append(",");
+            retString.append(cards[i].getID());
+        } //eof
+    }
+    // Adv Cards
+    else
+    {
+        retString.append(cards[10].getID());
+        for (int i = 11; i < int(cards.size()); i++)
+        {
+            retString.append(",");
+            retString.append(cards[i].getID());
+        } //eof
+    }
+    retString.append("]");
+    return retString;
+} //eo cardVectorToJsonStr
+
+void GameMonitor::addDeckToProfileDB()
+{
+    // Check if deck is not yet added to the profile
+    vector<Deck> decksInProfile = profileDB.at(this->m_currProfile.getProfileName()).getAllDecks();
+    bool deckFound = false;
+    for (int i = 0; i < int(decksInProfile.size()); i++)
+    {
+        if (decksInProfile.at(i).getDeckName().compare(this->m_currDeck.getDeckName()) == 0)
+        {
+            deckFound = true;
+        }
+    } //eof
+    // Add deck to profile if it wasnt found
+    if (deckFound == false)
+    {
+        profileDB.at(this->m_currProfile.getProfileName()).addDeck(this->m_currDeck);
+    }
+} //eo addDeckToProfileDB
+
+void GameMonitor::saveAll()
+{
+    // write in a nice readible way
+    Json::StyledWriter styledWriter;
+
+    Json::Value profilesRoot;
+    Json::Value profileArray;
+    Json::Value profileAttributes;
+    Json::Value deckArray;
+    Json::Value deckAttributes;
+
+    map<string, Profile>::iterator it;
+
+    for (it = profileDB.begin(); it != profileDB.end(); it++)
+    {
+        Profile tempProfile = it->second;
+        vector<Deck> deckVector   = tempProfile.getAllDecks();
+
+        deckArray.clear();
+        // Loop through Decks
+        for (int t_deckIdx = 0; t_deckIdx < int(deckVector.size()); t_deckIdx++)
+        {
+            Deck tempDeck = deckVector[t_deckIdx];
+            deckAttributes["Name"]          = tempDeck.getDeckName();
+            deckAttributes["BasicCards"]    = cardVectorToJsonStr(tempDeck.getOriginalDeck(), 0);
+            deckAttributes["AdvancedCards"] = cardVectorToJsonStr(tempDeck.getOriginalDeck(), 1);
+            deckArray.append(deckAttributes);
+        } //eof
+        
+        profileAttributes["Name"]  = tempProfile.getProfileName();
+        profileAttributes["Decks"] = deckArray;
+        profileArray.append(profileAttributes);
+    } //eof
+
+    profilesRoot["Profiles"] = profileArray;
+
+    cout << "Saving to: " << SAVE_ALL_PATH << endl;
+    sleep(2);
+    ofstream myfile;
+    myfile.open (SAVE_ALL_PATH);
+    myfile << styledWriter.write(profilesRoot);
+    myfile.close();
+
+} //eo saveAll
+
 void GameMonitor::mainMenu()
 {
     //clear console screen
@@ -172,9 +271,7 @@ void GameMonitor::mainMenu()
         break;
     // Save All
     case '5':
-        cout << endl;
-        cout << "NOT IMPLEMENTED" << endl;
-        sleep(1); //sleep for 2s
+        saveMenu();
         mainMenu();
         break;
     // Exit
@@ -194,75 +291,74 @@ void GameMonitor::mainMenu()
 
 void GameMonitor::playGameMenu() 
 {
-    this->m_profileSet ? t_loadedProfileName = this->m_currProfile.getProfileName() : "NONE PICKED";
-    this->m_deckSet    ? t_loadedDeckName    = this->m_currDeck.getDeckName()       : "NONE PICKED";
-
-    //clear console screen
-    system("cls"); 
-
-    cout << "============ Play Menu ============" << endl;
-    cout << "\t Profile: " << t_loadedProfileName << endl;
-    cout << "\t    Deck: " << t_loadedDeckName << endl;
-    
-    if (m_deckSet)
+    while (true)
     {
-        displayDeck(this->m_currDeck.getOriginalDeck());
-    }
+        this->m_profileSet ? t_loadedProfileName = this->m_currProfile.getProfileName() : "NONE PICKED";
+        this->m_deckSet    ? t_loadedDeckName    = this->m_currDeck.getDeckName()       : "NONE PICKED";
 
-    cout << endl;
-    cout << "1. Start Battle" << endl;
-    cout << "2. Change Deck" << endl;
-    cout << "3. Create Deck" << endl;
-    cout << "4. Back" << endl;
-    cout << "Choice: ";
-    cin >> t_inputChar;
+        //clear console screen
+        system("cls"); 
 
-    switch (t_inputChar)
-    {
-    // Start
-    case '1': 
-        if (m_currDeck.getOriginalDeckSize() < DECK_SIZE_LIMIT)
+        cout << "============ Play Menu ============" << endl;
+        cout << "\t Profile: " << t_loadedProfileName << endl;
+        cout << "\t    Deck: " << t_loadedDeckName << endl;
+        
+        if (m_deckSet)
         {
-            cout << endl;
-            cout << "Loaded deck isn't complete!" << endl;
-            sleep(1);
+            displayDeck(this->m_currDeck.getOriginalDeck());
         }
-        else
-        {
-            m_battleMonitor.newBattle(m_currProfile, profileDB.at(BOT_PROFILE_NAME),m_currDeck, getRdmBotDeck());
-        }
-        playGameMenu();
-        break;
-    // Change Deck
-    case '2': 
-        if (this->m_profileSet == false)
-        {
-            cout << "No profile is selected. No decks to load from." << endl;
-            sleep(2);
-            playGameMenu();
-        }
-        else
-        {
-            changeDeckMenu();
-            playGameMenu();
-        }
-        break;
-    // Create Deck
-    case '3': 
-        createDeckMenu();
-        playGameMenu();
-        break;
-    // Back
-    case '4': 
-        mainMenu();
-        break;   
-    default:
+
         cout << endl;
-        cout << "Invalid Input" << t_inputChar << endl;
-        sleep(2); //sleep for 2s
-        playGameMenu();
-        break;
-    } //eos
+        cout << "1. Start Battle" << endl;
+        cout << "2. Change Deck" << endl;
+        cout << "3. Create Deck" << endl;
+        cout << "4. Back" << endl;
+        cout << "Choice: ";
+        cin >> t_inputChar;
+
+        switch (t_inputChar)
+        {
+        // Start
+        case '1': 
+            if (m_currDeck.getOriginalDeckSize() < DECK_SIZE_LIMIT)
+            {
+                cout << endl;
+                cout << "Loaded deck isn't complete!" << endl;
+                sleep(1);
+            }
+            else
+            {
+                m_battleMonitor.newBattle(m_currProfile, profileDB.at(BOT_PROFILE_NAME),m_currDeck, getRdmBotDeck());
+            }
+            break;
+        // Change Deck
+        case '2': 
+            if (this->m_profileSet == false)
+            {
+                cout << "No profile is selected. No decks to load from." << endl;
+                sleep(2);
+            }
+            else
+            {
+                changeDeckMenu();
+            }
+            break;
+        // Create Deck
+        case '3': 
+            createDeckMenu();
+            break;
+        // Back
+        case '4': 
+            mainMenu();
+            break;   
+        default:
+            cout << endl;
+            cout << "Invalid Input" << t_inputChar << endl;
+            sleep(2); //sleep for 2s
+            break;
+        } //eos
+    } //eow
+    
 } //eo playGameMenu
 
 void GameMonitor::cardInformationMenu()
@@ -343,6 +439,16 @@ void GameMonitor::gameRulesMenu()
     cin >> t_inputStr;
     mainMenu();
 } //eo gameRulesMenu
+
+void GameMonitor::saveMenu()
+{
+    //clear console screen
+    system("cls"); 
+    cout << "Saving..." << endl;
+    sleep(1);
+
+    saveAll();
+} //eo saveMenu
 
 void GameMonitor::loadProfileMenu() 
 {
@@ -428,7 +534,10 @@ void GameMonitor::changeProfileMenu()
             {
                 it++;
             }
-            
+            // Profile changed -> unset current deck 
+            Deck temp;
+            this->m_currDeck = temp;
+
             this->m_currProfile = it->second;
             this->m_profileSet = true;
             t_loadedProfileName = it->second.getProfileName();
@@ -484,54 +593,59 @@ void GameMonitor::newProfileMenu()
 
 void GameMonitor::changeDeckMenu() 
 {
-    //clear console screen
-    system("cls"); 
+    bool exitLoop = false;
 
-    cout << "============ Change Deck ============" << endl;
-    cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
-    cout << endl;
-    cout << "Decks Available: " << endl;
-    int counter;
-    for (counter = 1; counter < int(this->m_currProfile.getAllDecks().size())+1; counter++)
+    while (exitLoop == false)
     {
-        cout << counter << ". " << this->m_currProfile.getAllDecks().at(counter-1).getDeckName() << endl;
-    } //eof
-    cout << counter << ". Back" << endl;
-	cout << "Choice: ";
-    cin >> t_inputStr;
+        //clear console screen
+        system("cls"); 
 
-    if (t_inputStr.compare(""+(counter)) == 0)
-    {
-        playGameMenu();
-    }
-
-    int t_num;
-    // convert input to int
-    try
-    {
-        t_num = stoi(t_inputStr)-1;
-    }
-    catch(...)
-    {
+        cout << "============ Change Deck ============" << endl;
+        cout << "\t Deck Loaded: " << t_loadedDeckName << endl;
         cout << endl;
-        cout << "Invalid Input: " << t_inputStr << endl;
-        sleep(2); //sleep for 2s
-        changeDeckMenu();
-    }
+        cout << "Decks Available: " << endl;
+        int counter;
+        for (counter = 1; counter < int(this->m_currProfile.getAllDecks().size())+1; counter++)
+        {
+            cout << counter << ". " << this->m_currProfile.getAllDecks().at(counter-1).getDeckName() << endl;
+        } //eof
+        cout << "0. Back" << endl;
+        cout << "Choice: ";
+        cin >> t_inputStr;
+
+        if (t_inputStr.compare("0") == 0)
+        {
+            return;
+        }
+
+        int t_num;
+        // convert input to int
+        try
+        {
+            t_num = stoi(t_inputStr)-1;
+        }
+        catch(...)
+        {
+            cout << endl;
+            cout << "Invalid Input: " << t_inputStr << endl;
+            sleep(2); //sleep for 2s
+        }
+        
+        if (t_num <= int(this->m_currProfile.getAllDecks().size()))
+        {
+            m_currDeck = this->m_currProfile.getAllDecks().at(t_num);
+            m_deckSet = true;
+            t_loadedDeckName = m_currDeck.getDeckName();
+        }
+        else
+        {
+            cout << endl;
+            cout << "Invalid Input: " << t_inputStr << endl;
+            sleep(2); //sleep for 2s
+        }
+    }//eow
     
-    if (t_num <= int(this->m_currProfile.getAllDecks().size()))
-    {
-        m_currDeck = this->m_currProfile.getAllDecks().at(t_num);
-        m_deckSet = true;
-        t_loadedDeckName = m_currDeck.getDeckName();
-    }
-    else
-    {
-        cout << endl;
-        cout << "Invalid Input: " << t_inputStr << endl;
-        sleep(2); //sleep for 2s
-        changeDeckMenu();
-    }
+    
 } //eo changeDeckMenu
 
 void GameMonitor::createDeckMenu()
@@ -609,6 +723,11 @@ void GameMonitor::createDeckMenu()
         case '5':
             this->m_currDeck = t_deck;
             this->m_deckSet = true;
+            this->m_currProfile.addDeck(t_deck);
+            if (this->m_profileSet == true)
+            {
+                addDeckToProfileDB();
+            }
             t_exitMenu = true;
             break;
         case '6':

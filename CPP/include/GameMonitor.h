@@ -31,12 +31,17 @@ public:
     void displayDeck(vector<Card> cards);
     bool addCardValidation(Deck *deck, string cardID, uint8_t limit);
     Deck getRdmBotDeck();
+    // Basic Cards: choice = 0 | Adv Cards: choice = 0
+    string cardVectorToJsonStr(vector<Card> cards, int choice);
+    void addDeckToProfileDB();
+    void saveAll();
 
     // Menu functions
     void mainMenu();
     void playGameMenu();
     void cardInformationMenu();
     void gameRulesMenu();
+    void saveMenu();
 
     // Profile Menus
     void loadProfileMenu();

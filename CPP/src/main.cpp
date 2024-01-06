@@ -1,6 +1,9 @@
 #include "../include/fileUtils.h"
 #include "../include/GameMonitor.h"
 
+//DEBUG
+#include "../include/Profile.h"
+
 #include <iostream>
 #include <string>
 #include <map>
@@ -18,10 +21,8 @@ int main(){
   
   string tempFileString = "";
 
-  loadCardData(tempFileString, true);
-  loadProfileData(tempFileString, true);
-
-  masterCardList.at(ADV_MIGHTY_SWING_ID).printCard();
+  loadCardData(DEFAULT_CARD_LIST_FILE, false);
+  loadProfileData(PROFILES_SAVE_FILE, false);
 
   GameMonitor gm;
   gm.mainMenu();

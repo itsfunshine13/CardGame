@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <unistd.h>
 #include <map>
 
 using namespace std;
@@ -20,8 +21,9 @@ extern VersionData cardlistVersion;
 extern map<int, Card> masterCardList;
 extern map<string, Profile> profileDB;
 
-const string DEFAULT_CARD_LIST_FILE = "./CardData/cardData.json";
-const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/player_profiles.json";
+const string DEFAULT_CARD_LIST_FILE      = "./CardData/cardData.json";
+const string DEFAULT_PLAYER_PROFILE_FILE = "./Profiles/deafult_player_profiles.json";
+const string PROFILES_SAVE_FILE          = "./Profiles/profiles_save_file.json";
 
 // FUNCTION:
 //   loadCardData()
@@ -131,8 +133,19 @@ void loadProfileData(string filePath, bool useDefaultFile)
   if (parseJsonSuccess == false)
   {
     cout << "JSONCPP Parsing failed: " << err << endl;
-    return;
+    cout << "Loading default profile file" << endl;
+    sleep(2);
+    inFileStream = ifstream(DEFAULT_CARD_LIST_FILE);
+    parseJsonSuccess = parseFromStream(jsonBuilder, inFileStream, &root, &err);
+    if (parseJsonSuccess == false)
+    {
+      cout << "JSONCPP Parsing failed: " << err << endl;
+      sleep(2);
+      return;
+    }
   }
+
+  
 
   // Loop through profiles
   const Json::Value profileRoot = root["Profiles"];

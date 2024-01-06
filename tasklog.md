@@ -50,3 +50,13 @@ Updates and working tasks
 ## refactor-action-switch-with-lut
 - [ ] Implment Action 1 look-up-table
 - [ ] Implment Action 2 look-up-table
+
+## implement-save
+- [x] Save profiles to json
+    - [x] Update loadProfileData to check for save file
+- [x] Add W-L to deck - not implemented yet lul
+
+## implement-multiple-save-files
+- [ ] Add feature for multiple save files
+- [ ] Add loading of different save files
+- [ ] Add continue last save file 

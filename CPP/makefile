@@ -16,7 +16,7 @@ CFLAGS = -Wall -g
 # define any directories containing header files other than /usr/include
 #
 INCLUDES += include/BattleMonitor.h
-INCLUDES  = include/Card.h
+INCLUDES += include/Card.h
 INCLUDES += include/cardTypes.h
 INCLUDES += include/cardUtils.h
 INCLUDES += include/Deck.h

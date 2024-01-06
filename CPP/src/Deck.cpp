@@ -14,7 +14,7 @@ using namespace std;
 Deck::Deck()
 { 
     this->deckName = "NO_NAME_SET";
-    this->deckSizeLimit = 0; 
+    this->deckSizeLimit = DECK_SIZE_LIMIT; 
 }
 
 Deck::Deck(string deckName, uint8_t deckSizeLimit)
@@ -172,5 +172,24 @@ void Deck::discardPileToDeck()
         this->playDeck.push_back(this->discardPile[i]);
         this->discardPile.pop_back();
     }//eof
-    
 }
+
+int Deck::getWins()
+{
+    return this->wins;
+} //eo getWins
+
+int Deck::getLosses()
+{
+    return this->losses;
+} //eo getLosses
+
+void Deck::incrWins()
+{
+    this->wins++;
+} //eo incrWins
+
+void Deck::incrLosses()
+{
+    this->losses++;
+} //eo incrLosses

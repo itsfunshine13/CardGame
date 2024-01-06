@@ -13,8 +13,11 @@ private:
     vector<Card> playDeck;
     vector<Card> originalDeck;
     vector<Card> discardPile;
+    
     uint8_t deckSizeLimit;
-    string deckName;
+    string  deckName;
+    int     wins;
+    int     losses;
 
 public:
     Deck();
@@ -44,6 +47,11 @@ public:
     string getDeckName();
     void sendToDiscardPile(Card card);
     void discardPileToDeck();
+
+    int  getWins();
+    int  getLosses();
+    void incrWins();
+    void incrLosses();
 
 };
 
