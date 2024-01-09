@@ -132,15 +132,15 @@ void loadProfileData(string filePath, bool useDefaultFile)
   bool parseJsonSuccess = parseFromStream(jsonBuilder, inFileStream, &root, &err);
   if (parseJsonSuccess == false)
   {
-    cout << "JSONCPP Parsing failed: " << err << endl;
+    cout << "JSONCPP Parsing failed for file: " << filePath << endl;
     cout << "Loading default profile file" << endl;
-    sleep(3);
-    inFileStream = ifstream(DEFAULT_CARD_LIST_FILE);
+    sleep(2);
+    inFileStream = ifstream(DEFAULT_PLAYER_PROFILE_FILE);
     parseJsonSuccess = parseFromStream(jsonBuilder, inFileStream, &root, &err);
     if (parseJsonSuccess == false)
     {
-      cout << "JSONCPP Parsing failed: " << err << endl;
-      sleep(3);
+      cout << "JSONCPP Parsing failed for file " << DEFAULT_PLAYER_PROFILE_FILE << endl;
+      sleep(2);
       return;
     }
   }

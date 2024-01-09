@@ -493,8 +493,6 @@ void GameMonitor::changeProfileMenu()
     system("cls"); 
 
     cout << "============ Change Profile ============" << endl;
-    cout << "\t Profile Loaded: " << this->m_currProfile.getProfileName() << endl;
-    cout << endl;
 
     map<string, Profile>::iterator it;
     int counter = 1;

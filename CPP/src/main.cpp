@@ -21,7 +21,7 @@ int main(){
   
   string tempFileString = "";
 
-  loadCardData(DEFAULT_CARD_LIST_FILE, false);
+  loadCardData(DEFAULT_CARD_LIST_FILE, true);
   loadProfileData(PROFILES_SAVE_FILE, false);
 
   GameMonitor gm;
